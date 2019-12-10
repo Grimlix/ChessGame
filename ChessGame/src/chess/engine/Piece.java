@@ -36,7 +36,7 @@ public abstract class Piece {
     }
 
     public int fonctionDeTestGit(){
-        return null;
+        return 0;
     }
 
 
