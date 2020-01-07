@@ -13,6 +13,8 @@ public class ChessBoard implements ChessController {
      private final  int BOARD_HEIGHT = 8;
      private final int BOARD_LENGTH = 8;
 
+     private static int turn = 0;
+
 
      public ChessBoard(){
           this.board = new Piece[BOARD_HEIGHT][BOARD_LENGTH];
@@ -33,19 +35,49 @@ public class ChessBoard implements ChessController {
 
      public boolean move(int fromX, int fromY, int toX, int toY){
 
-          if(board[fromX][fromY] == null){
-               view.displayMessage("La casse est vide trou du cul.");
+          Piece srcPiece = board[fromX][fromY];
+          Piece dstPiece = board[toX][toY];
+
+          //if the cell where the piece should be is empty
+          //the player cannot play this move
+          if(srcPiece == null){
+               view.displayMessage("La case est vide trou du cul.");
                return false;
           }
 
-          Piece movingPiece = board[fromX][fromY];
+          //Configuration of player's turn.
+          //if turn = 0  ==> WHITE
+          //if turn = 1 ==> BLACK
+          //it changes the turn after each move.
+          if (turn == 0){
+               if(srcPiece.getColor() != PlayerColor.WHITE){
+                    view.displayMessage("C'est au tour du blanc bec de jouer");
+                    return false;
+               }
+               turn = 1; //changing player's turn
+          }else{
+               if(srcPiece.getColor() != PlayerColor.BLACK){
+                    view.displayMessage("C'est au tour du renoi de jouer");
+                    return false;
+               }
+               turn = 0; //chagning player's turn
+          }
+
+
+          /*
+          TENTATIVE de faire qu'il puisse pas se tuer lui même mais il pense qu'une case vide ils ont
+          tous la même couleur pour lui
+
+          if(dstPiece.getColor() == srcPiece.getColor()){
+               view.displayMessage("T'essaie de tuer un de tes gars boloss.");
+               return false;
+          }
+           */
 
           this.view.removePiece(fromX, fromY);
-          this.view.putPiece(movingPiece.getType(), movingPiece.getColor(), toX, toY);
-          board[toX][toY] = movingPiece;
-          board[fromX][fromY] = null;
-
-
+          this.view.putPiece(srcPiece.getType(), srcPiece.getColor(), toX, toY);
+          dstPiece = srcPiece;
+          srcPiece = null;
 
           return true;
      }
