@@ -17,6 +17,7 @@ public abstract class Piece {
     }
 
     public boolean move(int fromX, int fromY, int toX, int toY){
+
         return true;
     }
 

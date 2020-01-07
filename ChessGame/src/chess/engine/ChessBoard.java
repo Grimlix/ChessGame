@@ -2,18 +2,73 @@ package chess.engine;
 
 
 import chess.PlayerColor;
+import chess.ChessController;
+import chess.ChessView;
 
-public class ChessBoard {
+public class ChessBoard implements ChessController {
 
 
      private Piece[][] board;
+     private ChessView view;
      private final  int BOARD_HEIGHT = 8;
      private final int BOARD_LENGTH = 8;
 
 
      public ChessBoard(){
-
           this.board = new Piece[BOARD_HEIGHT][BOARD_LENGTH];
+     }
+
+     public Piece[][] getBoard(){
+          return this.board;
+     }
+
+     public int getBOARD_HEIGHT(){
+          return this.BOARD_HEIGHT;
+     }
+
+     public int getBOARD_LENGTH(){
+          return this.BOARD_LENGTH;
+     }
+
+
+     public boolean move(int fromX, int fromY, int toX, int toY){
+
+          if(board[fromX][fromY] == null){
+               view.displayMessage("La casse est vide trou du cul.");
+               return false;
+          }
+
+          Piece movingPiece = board[fromX][fromY];
+
+          this.view.removePiece(fromX, fromY);
+          this.view.putPiece(movingPiece.getType(), movingPiece.getColor(), toX, toY);
+          board[toX][toY] = movingPiece;
+          board[fromX][fromY] = null;
+
+
+
+          return true;
+     }
+
+     public void start(ChessView view){
+          this.view = view;
+
+          view.startView();
+
+          while(true){
+
+          }
+
+     }
+
+     public void newGame(){
+
+          for(int i = 0; i < BOARD_HEIGHT; i++){
+               for(int j = 0; j < BOARD_LENGTH; j++){
+                    this.view.removePiece(i, j);
+               }
+          }
+
 
           board[4][0] = new King(4,0, PlayerColor.WHITE);
           board[4][7] = new King(4,7, PlayerColor.BLACK);
@@ -53,24 +108,15 @@ public class ChessBoard {
           board[5][6] = new Pawn(5,6, PlayerColor.BLACK);
           board[6][6] = new Pawn(6,6, PlayerColor.BLACK);
           board[7][6] = new Pawn(7,6, PlayerColor.BLACK);
+
+          for(int i = 0; i < BOARD_HEIGHT; i++){
+               for(int j = 0; j < BOARD_LENGTH; j++){
+                    if(board[i][j] != null){
+                         this.view.putPiece(board[i][j].getType(), board[i][j].getColor(), i, j);
+                    }
+               }
+          }
+
      }
-
-     public Piece[][] getBoard(){
-          return this.board;
-     }
-
-     public int getBOARD_HEIGHT(){
-          return this.BOARD_HEIGHT;
-     }
-
-     public int getBOARD_LENGTH(){
-          return this.BOARD_LENGTH;
-     }
-
-
-
-
-
-
 
 }
