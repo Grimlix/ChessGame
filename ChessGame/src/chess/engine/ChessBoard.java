@@ -66,6 +66,7 @@ public class ChessBoard implements ChessController {
           for(int i = 0; i < BOARD_HEIGHT; i++){
                for(int j = 0; j < BOARD_LENGTH; j++){
                     this.view.removePiece(i, j);
+                    board[i][j] = null;
                }
           }
 
