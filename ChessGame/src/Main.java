@@ -5,8 +5,7 @@ import chess.PlayerColor;
 import chess.views.console.ConsoleView;
 import chess.views.gui.GUIView;
 
-import chess.engine.ChessBoard;
-import chess.engine.Piece;
+import chess.engine.Board;
 
 public class Main {
 
@@ -14,12 +13,9 @@ public class Main {
 
 
 
-
-
-
     public static void main(String[] args){
 
-        ChessController board = new ChessBoard();
+        ChessController board = new Board();
 
         //ChessView view = new ConsoleView(controller);
         ChessView view = new GUIView(board);

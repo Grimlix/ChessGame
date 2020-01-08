@@ -3,42 +3,52 @@ package chess.engine;
 import chess.PieceType;
 import chess.PlayerColor;
 
-public abstract class Piece {
-    private int x;
-    private int y;
-    private PlayerColor color;
+abstract class Piece {
+
+
+    private Square square;
+
+
+
     private PieceType type;
 
-    public Piece(int x, int y, PlayerColor color, PieceType type){
-        this.x = x;
-        this.y = y;
+    private PlayerColor color;
+
+    public Piece(Square square, PlayerColor color, PieceType type){
         this.color = color;
+        this.square = square;
         this.type = type;
     }
 
-    public boolean move(int fromX, int fromY, int toX, int toY){
-
-        return true;
+    public PlayerColor getColor() {
+        return color;
     }
 
-    public PlayerColor getColor(){
-        return this.color;
+    public PieceType getType() {
+        return type;
     }
 
-    public int getX(){
-        return this.x;
-    }
-    public int getY(){
-        return this.y;
+    public Square getSquare() {
+        return square;
     }
 
-    public PieceType getType(){
-        return this.type;
+    public void move(Square square){
+        this.square = square;
     }
 
-    public int fonctionDeTestGit(){
-        return 0;
+    public boolean isLegalMove(Board board,Square to) {
+        if(to.getPiece() != null){
+            if(to.getPiece().getColor() == color){
+                return false;
+            }else{
+                return true;
+            }
+        }else{
+            return true;
+        }
     }
+
 
 
 }
+
