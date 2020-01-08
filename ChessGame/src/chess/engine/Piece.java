@@ -5,13 +5,8 @@ import chess.PlayerColor;
 
 abstract class Piece {
 
-
     private Square square;
-
-
-
     private PieceType type;
-
     private PlayerColor color;
 
     public Piece(Square square, PlayerColor color, PieceType type){

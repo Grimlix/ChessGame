@@ -171,19 +171,19 @@ public class Board implements ChessController {
           view.startView();
 
           while(true){
-
           }
      }
 
      @Override
      public boolean move(int fromX, int fromY, int toX, int toY) {
+
+          Square from = board[fromX][fromY];
+          Square to = board[toX][toY];
+
           if(board[fromX][fromY].getPiece() == null){
                view.displayMessage("La casse est vide trou du cul.");
                return false;
           }
-
-          Square from = board[fromX][fromY];
-          Square to = board[toX][toY];
 
           if(whiteTurn){
                if(from.getPiece().getColor() == PlayerColor.BLACK){
