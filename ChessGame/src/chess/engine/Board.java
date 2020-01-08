@@ -17,7 +17,7 @@ public class Board implements ChessController {
      private ChessView view;
      private final int BOARD_HEIGHT = 8;
      private final int BOARD_LENGTH = 8;
-     private boolean whiteTurn = true;
+     private boolean whiteTurn;
 
      private List<Move> move;
 
@@ -26,10 +26,13 @@ public class Board implements ChessController {
      }
 
      public void newGame(){
+          whiteTurn = true;
           initPieces();
      }
 
      private void initPieces(){
+
+          //Deleting all the piece on the board and on the view
           for(int i = 0; i < BOARD_HEIGHT; i++){
                for(int j = 0; j < BOARD_LENGTH; j++){
                     this.view.removePiece(i, j);
@@ -37,45 +40,47 @@ public class Board implements ChessController {
                }
           }
 
-          King kingW = new King(null, PlayerColor.WHITE, PieceType.KING);
-          King kingB = new King(null, PlayerColor.BLACK, PieceType.KING);
+          //CREATING ALL THE PIECES
+          Piece kingW = new King(null, PlayerColor.WHITE, PieceType.KING);
+          Piece kingB = new King(null, PlayerColor.BLACK, PieceType.KING);
 
-          Queen queenW = new Queen(null, PlayerColor.WHITE,PieceType.QUEEN);
-          Queen queenB = new Queen(null, PlayerColor.BLACK,PieceType.QUEEN);
+          Piece queenW = new Queen(null, PlayerColor.WHITE,PieceType.QUEEN);
+          Piece queenB = new Queen(null, PlayerColor.BLACK,PieceType.QUEEN);
 
-          Bishop bishopW1 = new Bishop(null, PlayerColor.WHITE,PieceType.BISHOP);
-          Bishop bishopW2 = new Bishop(null, PlayerColor.WHITE,PieceType.BISHOP);
-          Bishop bishopB1 = new Bishop(null, PlayerColor.BLACK,PieceType.BISHOP);
-          Bishop bishopB2 = new Bishop(null, PlayerColor.BLACK,PieceType.BISHOP);
+          Piece bishopW1 = new Bishop(null, PlayerColor.WHITE,PieceType.BISHOP);
+          Piece bishopW2 = new Bishop(null, PlayerColor.WHITE,PieceType.BISHOP);
+          Piece bishopB1 = new Bishop(null, PlayerColor.BLACK,PieceType.BISHOP);
+          Piece bishopB2 = new Bishop(null, PlayerColor.BLACK,PieceType.BISHOP);
 
-          Rook rookW1 = new Rook(null, PlayerColor.WHITE,PieceType.ROOK);
-          Rook rookW2 = new Rook(null, PlayerColor.WHITE,PieceType.ROOK);
-          Rook rookB1 = new Rook(null, PlayerColor.BLACK,PieceType.ROOK);
-          Rook rookB2 = new Rook(null, PlayerColor.BLACK,PieceType.ROOK);
+          Piece rookW1 = new Rook(null, PlayerColor.WHITE,PieceType.ROOK);
+          Piece rookW2 = new Rook(null, PlayerColor.WHITE,PieceType.ROOK);
+          Piece rookB1 = new Rook(null, PlayerColor.BLACK,PieceType.ROOK);
+          Piece rookB2 = new Rook(null, PlayerColor.BLACK,PieceType.ROOK);
 
-          Knight knightW1 = new Knight(null, PlayerColor.WHITE,PieceType.KNIGHT);
-          Knight knightW2 = new Knight(null, PlayerColor.WHITE,PieceType.KNIGHT);
-          Knight knightB1 = new Knight(null, PlayerColor.BLACK,PieceType.KNIGHT);
-          Knight knightB2 = new Knight(null, PlayerColor.BLACK,PieceType.KNIGHT);
+          Piece knightW1 = new Knight(null, PlayerColor.WHITE,PieceType.KNIGHT);
+          Piece knightW2 = new Knight(null, PlayerColor.WHITE,PieceType.KNIGHT);
+          Piece knightB1 = new Knight(null, PlayerColor.BLACK,PieceType.KNIGHT);
+          Piece knightB2 = new Knight(null, PlayerColor.BLACK,PieceType.KNIGHT);
 
-          Pawn pawnW1 = new Pawn(null, PlayerColor.WHITE,PieceType.PAWN);
-          Pawn pawnW2 = new Pawn(null, PlayerColor.WHITE,PieceType.PAWN);
-          Pawn pawnW3 = new Pawn(null, PlayerColor.WHITE,PieceType.PAWN);
-          Pawn pawnW4 = new Pawn(null, PlayerColor.WHITE,PieceType.PAWN);
-          Pawn pawnW5 = new Pawn(null, PlayerColor.WHITE,PieceType.PAWN);
-          Pawn pawnW6 = new Pawn(null, PlayerColor.WHITE,PieceType.PAWN);
-          Pawn pawnW7 = new Pawn(null, PlayerColor.WHITE,PieceType.PAWN);
-          Pawn pawnW8 = new Pawn(null, PlayerColor.WHITE,PieceType.PAWN);
+          Piece pawnW1 = new Pawn(null, PlayerColor.WHITE,PieceType.PAWN);
+          Piece pawnW2 = new Pawn(null, PlayerColor.WHITE,PieceType.PAWN);
+          Piece pawnW3 = new Pawn(null, PlayerColor.WHITE,PieceType.PAWN);
+          Piece pawnW4 = new Pawn(null, PlayerColor.WHITE,PieceType.PAWN);
+          Piece pawnW5 = new Pawn(null, PlayerColor.WHITE,PieceType.PAWN);
+          Piece pawnW6 = new Pawn(null, PlayerColor.WHITE,PieceType.PAWN);
+          Piece pawnW7 = new Pawn(null, PlayerColor.WHITE,PieceType.PAWN);
+          Piece pawnW8 = new Pawn(null, PlayerColor.WHITE,PieceType.PAWN);
 
-          Pawn pawnB1 = new Pawn(null, PlayerColor.BLACK,PieceType.PAWN);
-          Pawn pawnB2 = new Pawn(null, PlayerColor.BLACK,PieceType.PAWN);
-          Pawn pawnB3 = new Pawn(null, PlayerColor.BLACK,PieceType.PAWN);
-          Pawn pawnB4 = new Pawn(null, PlayerColor.BLACK,PieceType.PAWN);
-          Pawn pawnB5 = new Pawn(null, PlayerColor.BLACK,PieceType.PAWN);
-          Pawn pawnB6 = new Pawn(null, PlayerColor.BLACK,PieceType.PAWN);
-          Pawn pawnB7 = new Pawn(null, PlayerColor.BLACK,PieceType.PAWN);
-          Pawn pawnB8 = new Pawn(null, PlayerColor.BLACK,PieceType.PAWN);
+          Piece pawnB1 = new Pawn(null, PlayerColor.BLACK,PieceType.PAWN);
+          Piece pawnB2 = new Pawn(null, PlayerColor.BLACK,PieceType.PAWN);
+          Piece pawnB3 = new Pawn(null, PlayerColor.BLACK,PieceType.PAWN);
+          Piece pawnB4 = new Pawn(null, PlayerColor.BLACK,PieceType.PAWN);
+          Piece pawnB5 = new Pawn(null, PlayerColor.BLACK,PieceType.PAWN);
+          Piece pawnB6 = new Pawn(null, PlayerColor.BLACK,PieceType.PAWN);
+          Piece pawnB7 = new Pawn(null, PlayerColor.BLACK,PieceType.PAWN);
+          Piece pawnB8 = new Pawn(null, PlayerColor.BLACK,PieceType.PAWN);
 
+          //CREATING ALL THE SQUARES WITH THE CORRESPONDING PIECE
           board[4][0] = new Square( kingW,4,0);
           kingW.move(board[4][0]);
           board[4][7] = new Square(kingB,4,7);
@@ -93,7 +98,6 @@ public class Board implements ChessController {
           bishopB1.move(board[2][7]);
           board[5][7] = new Square(bishopB2,5,7);
           bishopB2.move(board[5][7]);
-
 
           board[0][0] = new Square(rookW1,0,0);
           rookW1.move(board[0][0]);
@@ -130,7 +134,6 @@ public class Board implements ChessController {
           board[7][1] = new Square(pawnW8,7,1);
           pawnW8.move(board[7][1]);
 
-
           board[0][6] = new Square(pawnB1,0,6);
           pawnB1.move(board[0][6]);
           board[1][6] = new Square(pawnB2,1,6);
@@ -148,13 +151,14 @@ public class Board implements ChessController {
           board[7][6] = new Square(pawnB8,7,6);
           pawnB8.move(board[7][6]);
 
-
+          //CREATING ALL THE SQUARE WHERE THERE ARE NO PIECES
           for(int i = 0; i < BOARD_LENGTH; i++){
                for(int j = 2; j < 6; j++){
                     board[i][j] = new Square(null,i,j);
                }
           }
 
+          //PLAYING ALL THE PIECE ON THE VIEW
           for(int i = 0; i < BOARD_HEIGHT; i++){
                for(int j = 0; j < BOARD_LENGTH; j++){
                     if(board[i][j].getPiece() != null){
@@ -180,11 +184,12 @@ public class Board implements ChessController {
           Square from = board[fromX][fromY];
           Square to = board[toX][toY];
 
-          if(board[fromX][fromY].getPiece() == null){
+          //if the source square is empty it won't work
+          if(from.getPiece() == null){
                view.displayMessage("La casse est vide trou du cul.");
                return false;
           }
-
+          //Playing turn after turn, nobody can play more than once
           if(whiteTurn){
                if(from.getPiece().getColor() == PlayerColor.BLACK){
                     view.displayMessage("je suis pas un blanc bec");
@@ -197,7 +202,10 @@ public class Board implements ChessController {
                }
           }
 
+          //Checking if the piece allows the move, if true we change the player's turn and
+          //the view. Otherwise returns false.
           if(from.getPiece().isLegalMove(this,to)){
+
                this.view.removePiece(fromX, fromY);
                this.view.putPiece(from.getPiece().getType(), from.getPiece().getColor(), toX, toY);
 
@@ -205,17 +213,15 @@ public class Board implements ChessController {
                to.setPiece(from.getPiece());
                from.removePiece();
 
-
-
-
+               //Changing the player's turn
                if(whiteTurn){
                     whiteTurn = false;
                }else{
                     whiteTurn = true;
                }
-
                return true;
           }else{
+               this.view.displayMessage("Il a pas le droit de faire ca lui");
                return false;
           }
      }

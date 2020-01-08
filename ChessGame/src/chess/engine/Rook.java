@@ -4,40 +4,55 @@ import chess.PieceType;
 import chess.PlayerColor;
 
 public class Rook extends Piece {
-    private static final PieceType type = PieceType.ROOK;
 
     public Rook(Square square, PlayerColor color,PieceType type){
         super(square,color, type);
     }
 
-    public PieceType getType(){
-        return type;
-    }
-
     public boolean isLegalMove(Board board, Square to){
+        System.out.println("In isLegalMove Rook");
         if(!super.isLegalMove(board,to)){
+            System.out.println("In super isLegalMove Rook");
             return false;
         }
         else if((getSquare().getX() == to.getX() && getSquare().getY() != to.getY())){
             int i = getSquare().getX();
-            for(int j = getSquare().getY() + 1; j < to.getY(); j++){
-                if(board.getBoard()[i][j].getPiece() != null){
-                    return false;
+            if(getSquare().getY() > to.getY()){
+                for(int j = getSquare().getY() - 1; j > to.getY(); j--){
+                    if(board.getBoard()[i][j].getPiece() != null){
+                        return false;
+                    }
                 }
+                return true;
+            }else{
+                for(int j = getSquare().getY() + 1; j < to.getY(); j++){
+                    if(board.getBoard()[i][j].getPiece() != null){
+                        return false;
+                    }
+                }
+                return true;
             }
-            return true;
         }
         else if(getSquare().getX() != to.getX() && getSquare().getY() == to.getY()){
             int j = getSquare().getY();
-            for(int i = getSquare().getY() + 1; i < to.getY(); i++){
-                if(board.getBoard()[i][j].getPiece() != null){
-                    return false;
+            if(getSquare().getX() > to.getX()){
+                for(int i = getSquare().getX() -1; i > to.getX(); i--){
+                    if(board.getBoard()[i][j].getPiece() != null){
+                        return false;
+                    }
                 }
+                return true;
+            }else{
+                for(int i = getSquare().getX() + 1; i < to.getX(); i++){
+                    if(board.getBoard()[i][j].getPiece() != null){
+                        return false;
+                    }
+                }
+                return true;
             }
-            return true;
+
         }else{
             return false;
         }
-
     }
 }

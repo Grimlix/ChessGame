@@ -33,7 +33,7 @@ abstract class Piece {
 
     public boolean isLegalMove(Board board,Square to) {
         if(to.getPiece() != null){
-            if(to.getPiece().getColor() == color){
+            if(to.getPiece().getColor() == this.color){
                 return false;
             }else{
                 return true;

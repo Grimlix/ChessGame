@@ -5,10 +5,8 @@ import chess.ChessView;
 public class Square {
 
     private Piece piece;
-
     private int x;
     private int y;
-
 
     public Square(Piece piece, int x, int y) {
         this.piece = piece;
