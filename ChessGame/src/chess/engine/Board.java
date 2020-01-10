@@ -31,7 +31,6 @@ public class Board implements ChessController {
      }
 
      private void initPieces(){
-
           //Deleting all the piece on the board and on the view
           for(int i = 0; i < BOARD_HEIGHT; i++){
                for(int j = 0; j < BOARD_LENGTH; j++){
