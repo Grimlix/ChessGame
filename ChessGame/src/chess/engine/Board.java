@@ -5,6 +5,7 @@ import chess.ChessView;
 import chess.PieceType;
 import chess.PlayerColor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Board implements ChessController {
@@ -17,17 +18,43 @@ public class Board implements ChessController {
      private ChessView view;
      private final int BOARD_HEIGHT = 8;
      private final int BOARD_LENGTH = 8;
-     private boolean whiteTurn;
+     private PlayerColor playerTurn;
 
-     private List<Move> move;
+    private List<Move> moves ;
 
      public Board(){
           this.board = new Square[BOARD_LENGTH][BOARD_HEIGHT];
+          this.moves = new ArrayList<>();
      }
 
      public void newGame(){
-          whiteTurn = true;
+          playerTurn = PlayerColor.WHITE;
           initPieces();
+     }
+
+     private Square getKingPos(PlayerColor color){
+         for(Square[] x: board)
+         {
+             for(Square y : x){
+                 if(y.getPiece() != null && y.getPiece().getType() == PieceType.KING && y.getPiece().getColor() == color){
+                     return y;
+                 }
+             }
+         }
+         return null;
+     }
+
+     private boolean isCheck(PlayerColor color){
+         Square king = getKingPos(color);
+         for(Square[] x: board)
+         {
+             for(Square y : x){
+                if(y.getPiece() != null && y.getPiece().isLegalMove(this,king)){
+                    return true;
+                }
+             }
+         }
+         return false;
      }
 
      private void initPieces(){
@@ -189,7 +216,7 @@ public class Board implements ChessController {
                return false;
           }
           //Playing turn after turn, nobody can play more than once
-          if(whiteTurn){
+          if(playerTurn == PlayerColor.WHITE){
                if(from.getPiece().getColor() == PlayerColor.BLACK){
                     view.displayMessage("C'est aux blancs de jouer !");
                     return false;
@@ -205,20 +232,46 @@ public class Board implements ChessController {
           //the view. Otherwise returns false.
           if(from.getPiece().isLegalMove(this,to)){
 
-               this.view.removePiece(fromX, fromY);
-               this.view.putPiece(from.getPiece().getType(), from.getPiece().getColor(), toX, toY);
+               Move move = new Move(from,to,from.getPiece());
+               moves.add(move);
+
+
 
                from.getPiece().move(to);
                to.setPiece(from.getPiece());
                from.removePiece();
 
-               //Changing the player's turn
-               if(whiteTurn){
-                    whiteTurn = false;
+               if(!isCheck(playerTurn)){
+                   //undo last move so it can be added to the view
+                   move.getTo().getPiece().move(move.getFrom());
+                   move.getFrom().setPiece(move.getTo().getPiece());
+                   move.getTo().removePiece();
+
+                   this.view.removePiece(fromX, fromY);
+                   this.view.putPiece(from.getPiece().getType(), from.getPiece().getColor(), toX, toY);
+
+                   //redo move
+                   from.getPiece().move(to);
+                   to.setPiece(from.getPiece());
+                   from.removePiece();
+
+                   //Changing the player's turn
+                   if(playerTurn == PlayerColor.WHITE){
+                       playerTurn = PlayerColor.BLACK;
+                   }else{
+                       playerTurn = PlayerColor.WHITE;
+                   }
+                   return true;
                }else{
-                    whiteTurn = true;
+                   //Undo last move
+                   move.getTo().getPiece().move(move.getFrom());
+                   move.getFrom().setPiece(move.getTo().getPiece());
+                   move.getTo().removePiece();
+                   moves.remove(move);
+                   this.view.displayMessage("Echec !");
+                   return false;
                }
-               return true;
+
           }else{
                this.view.displayMessage("Il a pas le droit de faire ca lui");
                return false;
