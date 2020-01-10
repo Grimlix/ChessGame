@@ -13,10 +13,63 @@ public class Bishop extends Piece {
     }
 
     public boolean isLegalMove(Board board, Square to) {
-        if(!super.isLegalMove(board,to)){
-            return false;
+        if(super.isLegalMove(board,to) && isToInDiagonalSquare(to) && isThereAPieceBetween(board,to)){
+            return true;
         }
+        return false;
+    }
 
+    private boolean isThereAPieceBetween(Board board,Square to) {
+        int fromX = getSquare().getX();
+        int fromY = getSquare().getY();
+        int toX = to.getX();
+        int toY = to.getY();
+
+        int posXDiff = abs(fromX - toX);
+
+        posXDiff--;
+        //Check if there is a Piece in squares between Bishop and to
+        //right diagonals
+        if (toX > fromX) {
+            //top right diagonal
+            if (toY > fromY) {
+                while (posXDiff != 0) {
+                    if (board.getBoard()[fromX + posXDiff][fromY + posXDiff].getPiece() != null) {
+                        return false;
+                    }
+                    posXDiff--;
+                }
+            } else {//bottom right diagonal
+                while (posXDiff != 0) {
+                    if (board.getBoard()[fromX + posXDiff][fromY - posXDiff].getPiece() != null) {
+                        return false;
+                    }
+                    posXDiff--;
+                }
+            }
+        } else { //left diagonals
+            //top left diagonal
+            if (toY > fromY) {
+                while (posXDiff != 0) {
+                    if (board.getBoard()[fromX - posXDiff][fromY + posXDiff].getPiece() != null) {
+                        return false;
+                    }
+                    posXDiff--;
+                }
+            } else {//bottom left diagonal
+                while (posXDiff != 0) {
+                    if (board.getBoard()[fromX - posXDiff][fromY - posXDiff].getPiece() != null) {
+                        return false;
+                    }
+                    posXDiff--;
+                }
+            }
+        }
+        return true;
+    }
+
+    //check if to is in Diagonal Square from Rook
+    private boolean isToInDiagonalSquare(Square to){
         int fromX = getSquare().getX();
         int fromY = getSquare().getY();
         int toX = to.getX();
@@ -34,49 +87,6 @@ public class Bishop extends Piece {
                 return false;
             }
         }
-
-        posXDiff--;
-        //Check if there is a Piece in squares between Bishop and to
-        //right diagonals
-        if(toX > fromX){
-            //top right diagonal
-            if(toY > fromY){
-                while(posXDiff != 0){
-                    if(board.getBoard()[fromX + posXDiff][fromY + posXDiff].getPiece() != null){
-                        return false;
-                    }
-                    posXDiff--;
-                }
-            }else{//bottom right diagonal
-                while(posXDiff != 0){
-                    if(board.getBoard()[fromX + posXDiff][fromY - posXDiff].getPiece() != null){
-                        return false;
-                    }
-                    posXDiff--;
-                }
-            }
-        }else{ //left diagonals
-            //top left diagonal
-            if(toY > fromY){
-                while(posXDiff != 0){
-                    if(board.getBoard()[fromX - posXDiff][fromY + posXDiff].getPiece() != null){
-                        return false;
-                    }
-                    posXDiff--;
-                }
-            }else{//bottom left diagonal
-                while(posXDiff != 0){
-                    if(board.getBoard()[fromX - posXDiff][fromY - posXDiff].getPiece() != null){
-                        return false;
-                    }
-                    posXDiff--;
-                }
-            }
-
-        }
-
-
-
         return true;
     }
 }

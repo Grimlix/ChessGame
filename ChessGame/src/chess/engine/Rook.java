@@ -9,13 +9,20 @@ public class Rook extends Piece {
         super(square,color, type);
     }
 
-    public boolean isLegalMove(Board board, Square to){
-        System.out.println("In isLegalMove Rook");
-        if(!super.isLegalMove(board,to)){
-            System.out.println("In super isLegalMove Rook");
+    //check if to is either in an Horizontal or Vertical Square from Rook
+    private boolean isToInHorizontalVerticalSquare(Square to) {
+        if (getSquare().getX() == to.getX() && getSquare().getY() != to.getY()
+                || getSquare().getX() != to.getX() && getSquare().getY() == to.getY()) {
+            return true;
+        } else {
             return false;
         }
-        else if((getSquare().getX() == to.getX() && getSquare().getY() != to.getY())){
+    }
+
+    //check if there is a Piece between Rook and to
+    private boolean isThereAPieceBetween(Board board, Square to){
+
+        if(getSquare().getX() == to.getX()){
             int i = getSquare().getX();
             if(getSquare().getY() > to.getY()){
                 for(int j = getSquare().getY() - 1; j > to.getY(); j--){
@@ -23,17 +30,14 @@ public class Rook extends Piece {
                         return false;
                     }
                 }
-                return true;
             }else{
                 for(int j = getSquare().getY() + 1; j < to.getY(); j++){
                     if(board.getBoard()[i][j].getPiece() != null){
                         return false;
                     }
                 }
-                return true;
             }
-        }
-        else if(getSquare().getX() != to.getX() && getSquare().getY() == to.getY()){
+        }else{
             int j = getSquare().getY();
             if(getSquare().getX() > to.getX()){
                 for(int i = getSquare().getX() -1; i > to.getX(); i--){
@@ -41,15 +45,20 @@ public class Rook extends Piece {
                         return false;
                     }
                 }
-                return true;
             }else{
                 for(int i = getSquare().getX() + 1; i < to.getX(); i++){
                     if(board.getBoard()[i][j].getPiece() != null){
                         return false;
                     }
                 }
-                return true;
             }
+        }
+        return true;
+    }
+
+    public boolean isLegalMove(Board board, Square to) {
+        if(super.isLegalMove(board, to) && isToInHorizontalVerticalSquare(to) && isThereAPieceBetween(board,to)){
+                return true;
 
         }else{
             return false;
