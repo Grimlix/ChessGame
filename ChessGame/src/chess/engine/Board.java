@@ -8,9 +8,13 @@ import chess.PlayerColor;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.StrictMath.abs;
+
 public class Board implements ChessController {
 
-     public Square[][] getBoard() {
+    private Object Piece;
+
+    public Square[][] getBoard() {
           return board;
      }
 
@@ -50,8 +54,7 @@ public class Board implements ChessController {
          for(Square[] x: board)
          {
              for(Square y : x){
-                if(y.getPiece() != null && y.getPiece().getColor() != color && y.getPiece().isLegalMove(this,king)){
-                    System.out.println(y.getPiece().getType());
+                if(y.getPiece() != null && y.getPiece().isLegalMove(this,king)){
                     return true;
                 }
              }
@@ -206,6 +209,8 @@ public class Board implements ChessController {
           }
      }
 
+
+
      @Override
      public boolean move(int fromX, int fromY, int toX, int toY) {
 
@@ -237,17 +242,47 @@ public class Board implements ChessController {
                Move move = new Move(from,to,from.getPiece());
                moves.add(move);
 
-
-
                from.getPiece().move(to);
                to.setPiece(from.getPiece());
                from.removePiece();
 
                if(!isCheck(playerTurn)){
+
                    //undo last move so it can be added to the view
                    move.getTo().getPiece().move(move.getFrom());
                    move.getFrom().setPiece(move.getTo().getPiece());
                    move.getTo().removePiece();
+
+                   //if it's the king and the deplacement is == 2 there is a rock, we control that in isLegalMove from
+                   //king already
+                   if(from.getPiece().getType() == PieceType.KING && abs(from.getY() - to.getY()) == 2){
+                       //vrify if the way is checked or not
+                       int distance = from.getY() - to.getY();
+                       switch(distance){
+                           case -2 : //grand rock
+                               this.board[0][fromY].getPiece().move(this.board[3][fromY]);
+                               this.board[3][fromY].setPiece(this.board[0][fromY].getPiece());
+                               this.board[0][fromY].removePiece();
+
+                               this.view.removePiece(0, fromY);
+                               this.view.putPiece(this.board[0][fromY].getPiece().getType(), this.board[0][fromY].getPiece().getColor(), 3, fromY);
+
+                               // TODO move
+                                break;
+
+                           case 2 : //oetit rock
+                               this.board[7][fromY].getPiece().move(this.board[5][fromY]);
+                               this.board[5][fromY].setPiece(this.board[7][fromY].getPiece());
+                               this.board[7][fromY].removePiece();
+
+                               this.view.removePiece(7, fromY);
+                               this.view.putPiece(this.board[7][fromY].getPiece().getType(), this.board[7][fromY].getPiece().getColor(), 5, fromY);
+
+                               //TODO move
+
+                               break;
+                       }
+                   }
 
                    this.view.removePiece(fromX, fromY);
                    this.view.putPiece(from.getPiece().getType(), from.getPiece().getColor(), toX, toY);
@@ -278,7 +313,7 @@ public class Board implements ChessController {
                    move.getFrom().setPiece(move.getTo().getPiece());
                    move.getTo().removePiece();
                    moves.remove(move);
-                   this.view.displayMessage("Vous êtes en echec !");
+                   this.view.displayMessage("Ca vous mets en echec !");
                    return false;
                }
 
@@ -287,6 +322,5 @@ public class Board implements ChessController {
                return false;
           }
      }
-
 
 }

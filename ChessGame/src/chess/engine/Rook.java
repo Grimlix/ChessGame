@@ -5,15 +5,10 @@ import chess.PlayerColor;
 
 public class Rook extends Piece {
 
-    public boolean hasMoved() {
-        return hasMoved;
-    }
-
-    private boolean hasMoved;
+    private boolean hasMoved = false;
 
     public Rook(Square square, PlayerColor color,PieceType type){
         super(square,color, type);
-        this.hasMoved = false;
     }
 
     //check if to is either in an Horizontal or Vertical Square from Rook
@@ -65,7 +60,7 @@ public class Rook extends Piece {
 
     public boolean isLegalMove(Board board, Square to) {
         if(super.isLegalMove(board, to) && isToInHorizontalVerticalSquare(to) && isThereAPieceBetween(board,to)){
-                return true;
+            return true;
 
         }else{
             return false;
