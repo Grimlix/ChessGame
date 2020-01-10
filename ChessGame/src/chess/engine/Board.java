@@ -20,11 +20,12 @@ public class Board implements ChessController {
      private final int BOARD_LENGTH = 8;
      private PlayerColor playerTurn;
 
-    private List<Move> moves ;
+    private List<Move> moves;
 
      public Board(){
           this.board = new Square[BOARD_LENGTH][BOARD_HEIGHT];
           this.moves = new ArrayList<>();
+          this.playerTurn = PlayerColor.WHITE;
      }
 
      public void newGame(){
@@ -255,12 +256,19 @@ public class Board implements ChessController {
                    to.setPiece(from.getPiece());
                    from.removePiece();
 
+
+
                    //Changing the player's turn
                    if(playerTurn == PlayerColor.WHITE){
                        playerTurn = PlayerColor.BLACK;
                    }else{
                        playerTurn = PlayerColor.WHITE;
                    }
+
+                   if(isCheck(playerTurn)){
+                       this.view.displayMessage("Echec");
+                   }
+
                    return true;
                }else{
                    //Undo last move
@@ -268,7 +276,7 @@ public class Board implements ChessController {
                    move.getFrom().setPiece(move.getTo().getPiece());
                    move.getTo().removePiece();
                    moves.remove(move);
-                   this.view.displayMessage("Echec !");
+                   this.view.displayMessage("Vous êtes en echec !");
                    return false;
                }
 
