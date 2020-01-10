@@ -192,12 +192,12 @@ public class Board implements ChessController {
           //Playing turn after turn, nobody can play more than once
           if(whiteTurn){
                if(from.getPiece().getColor() == PlayerColor.BLACK){
-                    view.displayMessage("je suis pas un blanc bec");
+                    view.displayMessage("C'est aux blancs de jouer");
                     return false;
                }
           }else{
                if(from.getPiece().getColor() == PlayerColor.WHITE){
-                    view.displayMessage("je suis pas un trou du cul");
+                    view.displayMessage("C'est aux noirs de jouer");
                     return false;
                }
           }
