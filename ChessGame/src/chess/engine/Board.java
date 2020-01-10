@@ -256,6 +256,7 @@ public class Board implements ChessController {
                    //if it's the king and the deplacement is == 2 there is a rock, we control that in isLegalMove from
                    //king already
                    if(from.getPiece().getType() == PieceType.KING && abs(from.getY() - to.getY()) == 2){
+                       System.out.println("On y crois");
                        //vrify if the way is checked or not
                        int distance = from.getY() - to.getY();
                        switch(distance){
@@ -270,7 +271,7 @@ public class Board implements ChessController {
                                // TODO move
                                 break;
 
-                           case 2 : //oetit rock
+                           case 2 : //petit rock
                                this.board[7][fromY].getPiece().move(this.board[5][fromY]);
                                this.board[5][fromY].setPiece(this.board[7][fromY].getPiece());
                                this.board[7][fromY].removePiece();

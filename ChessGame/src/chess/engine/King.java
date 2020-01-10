@@ -9,9 +9,15 @@ public class King extends Piece{
 
     private static final int DISTANCE_MAX = 2;
     private boolean hasMoved;
+
+
     public King(Square square, PlayerColor color,PieceType type){
         super(square,color,type);
         this.hasMoved = false;
+    }
+
+    private boolean getHasMoved(){
+        return this.hasMoved;
     }
 
     private boolean isLegalRock(Board board, Square to){
@@ -21,7 +27,7 @@ public class King extends Piece{
                 if(to.getX() < getSquare().getX()) {//grand roque
                     if (board.getBoard()[0][getSquare().getY()].getPiece() instanceof Rook) {//check if tower is at it place
                         //check if tower has moved
-                        if (!((Rook) board.getBoard()[0][getSquare().getY()].getPiece()).hasMoved()) {
+                        if (!((Rook) board.getBoard()[0][getSquare().getY()].getPiece()).getHasMoved()) {
                             //check if square are empty
                             for (int i = 1; i < 4; i++) {
                                 if (board.getBoard()[i][getSquare().getY()].getPiece() != null) {
@@ -34,7 +40,7 @@ public class King extends Piece{
                 }else{//petit roque
                      if(board.getBoard()[7][getSquare().getY()].getPiece() instanceof Rook) {//chef if tower is at it place
                          //check if tower has moved
-                         if (!((Rook) board.getBoard()[7][getSquare().getY()].getPiece()).hasMoved()) {
+                         if (!((Rook) board.getBoard()[7][getSquare().getY()].getPiece()).getHasMoved()) {
                              //check if square are empty
                              for (int i = 5; i < 7; i++) {
                                  if (board.getBoard()[i][getSquare().getY()].getPiece() != null) {

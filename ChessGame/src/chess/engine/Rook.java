@@ -11,6 +11,10 @@ public class Rook extends Piece {
         super(square,color, type);
     }
 
+    public boolean getHasMoved(){
+        return this.hasMoved;
+    }
+
     //check if to is either in an Horizontal or Vertical Square from Rook
     private boolean isToInHorizontalVerticalSquare(Square to) {
         if (getSquare().getX() == to.getX() && getSquare().getY() != to.getY()
