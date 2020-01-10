@@ -253,14 +253,16 @@ public class Board implements ChessController {
                    move.getFrom().setPiece(move.getTo().getPiece());
                    move.getTo().removePiece();
 
+                   System.out.println(from.getY() - to.getY());
+
                    //if it's the king and the deplacement is == 2 there is a rock, we control that in isLegalMove from
                    //king already
-                   if(from.getPiece().getType() == PieceType.KING && abs(from.getY() - to.getY()) == 2){
+                   if(from.getPiece().getType() == PieceType.KING && abs(from.getX() - to.getX()) == 2){
                        System.out.println("On y crois");
                        //vrify if the way is checked or not
-                       int distance = from.getY() - to.getY();
+                       int distance = from.getX() - to.getX();
                        switch(distance){
-                           case -2 : //grand rock
+                           case 2 : //grand rock
                                this.board[0][fromY].getPiece().move(this.board[3][fromY]);
                                this.board[3][fromY].setPiece(this.board[0][fromY].getPiece());
                                this.board[0][fromY].removePiece();
@@ -271,7 +273,7 @@ public class Board implements ChessController {
                                // TODO move
                                 break;
 
-                           case 2 : //petit rock
+                           case -2 : //petit rock
                                this.board[7][fromY].getPiece().move(this.board[5][fromY]);
                                this.board[5][fromY].setPiece(this.board[7][fromY].getPiece());
                                this.board[7][fromY].removePiece();
