@@ -50,7 +50,8 @@ public class Board implements ChessController {
          for(Square[] x: board)
          {
              for(Square y : x){
-                if(y.getPiece() != null && y.getPiece().isLegalMove(this,king)){
+                if(y.getPiece() != null && y.getPiece().getColor() != color && y.getPiece().isLegalMove(this,king)){
+                    System.out.println(y.getPiece().getType());
                     return true;
                 }
              }

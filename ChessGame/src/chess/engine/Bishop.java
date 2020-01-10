@@ -4,7 +4,6 @@ import chess.PieceType;
 import chess.PlayerColor;
 
 import static java.lang.StrictMath.abs;
-import static java.lang.StrictMath.getExponent;
 
 public class Bishop extends Piece {
 
