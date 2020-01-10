@@ -123,7 +123,7 @@ public class Main {
         controller.start(view);
     */
 
-
+        //Lucas est une teub
         ChessController board = new Board();
         ChessView view = new GUIView(board);
         board.start(view);
