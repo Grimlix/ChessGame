@@ -259,6 +259,7 @@ public class Board implements ChessController {
 
 
 
+
                    //Changing the player's turn
                    if(playerTurn == PlayerColor.WHITE){
                        playerTurn = PlayerColor.BLACK;

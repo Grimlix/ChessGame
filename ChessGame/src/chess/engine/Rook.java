@@ -5,8 +5,15 @@ import chess.PlayerColor;
 
 public class Rook extends Piece {
 
+    public boolean hasMoved() {
+        return hasMoved;
+    }
+
+    private boolean hasMoved;
+
     public Rook(Square square, PlayerColor color,PieceType type){
         super(square,color, type);
+        this.hasMoved = false;
     }
 
     //check if to is either in an Horizontal or Vertical Square from Rook

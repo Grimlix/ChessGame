@@ -1,5 +1,5 @@
 package chess;
 
-public enum PieceType {
+public enum PieceType{
   PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING
 }
