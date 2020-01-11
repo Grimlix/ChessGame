@@ -3,11 +3,7 @@ package chess.engine;
 import chess.PieceType;
 import chess.PlayerColor;
 import chess.engine.utils.Moveable;
-
-import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.StrictMath.abs;
 
 public class King extends Piece {
 
@@ -19,51 +15,30 @@ public class King extends Piece {
         this.hasMoved = false;
     }
 
-
-    private boolean getHasMoved() {
-        return this.hasMoved;
-    }
-
-
-    //extraire dans des methodes static privée de la classe
-    //classe publique avec que des methodes static comme ca on a pas besoin d'instancier
-
-
-    //verifier que les cases sur lesquelles le roi se deplace ne sont pas en echecs
-    public boolean isLegalRock(Board board, Square to) {
-        //if King didnt move yet
+    private boolean checkRook(Board board, int x, int i_start, int i_end) {
         if (!this.hasMoved) {
-            if (abs(to.getX() - getSquare().getX()) == 2) {
-                if (to.getX() < getSquare().getX()) { //big castle
-                    if (board.getBoard()[0][getSquare().getY()].getPiece() instanceof Rook) {//check if tower is at it place
-                        //check if tower has moved
-                        if (!((Rook) board.getBoard()[0][getSquare().getY()].getPiece()).getHasMoved()) {
-                            //check if square are empty
-                            for (int i = 1; i < 4; i++) {
-                                if (board.getBoard()[i][getSquare().getY()].getPiece() != null) {
-                                    return false;
-                                }
-                            }
-                            return true;
-                        }
-                    }
-                } else { //small castle
-                    if (board.getBoard()[7][getSquare().getY()].getPiece() instanceof Rook) {//chef if tower is at it place
-                        //check if tower has moved
-                        if (!((Rook) board.getBoard()[7][getSquare().getY()].getPiece()).getHasMoved()) {
-                            //check if square are empty
-                            for (int i = 5; i < 7; i++) {
-                                if (board.getBoard()[i][getSquare().getY()].getPiece() != null) {
-                                    return false;
-                                }
-                            }
-                            return true;
-                        }
+            if (!((Rook) board.getBoard()[x][getSquare().getY()].getPiece()).getHasMoved()) {
+                //check if square are empty
+                for (int i = i_start; i < i_end; i++) {
+                    if (board.getBoard()[i][getSquare().getY()].getPiece() != null) {
+                        return false;
                     }
                 }
+                return true;
             }
         }
         return false;
+    }
+
+    //verifier que les cases sur lesquelles le roi se deplace ne sont pas en echecs
+    public boolean isLegalRock(Board board, Square to) {
+
+        int distance = this.getSquare().getX() - to.getX();
+        if (distance == board.getBIG_CASTLE()) {
+            return checkRook(board, 0, 1, 4);
+        } else {
+            return checkRook(board, 7, 5, 7);
+        }
     }
 
     //factoriser avec deltaX detlaY
@@ -76,12 +51,13 @@ public class King extends Piece {
         Moveable diag = this.getArr()[0];
         Moveable horizontal_vertical = this.getArr()[1];
 
-        List<Square> possibleSquare_1 = horizontal_vertical.move(board, this.getSquare(),1);
-        List<Square> possibleSquare_2 = diag.move(board, this.getSquare(),1);
+        List<Square> possibleSquare_1 = horizontal_vertical.move(board, this.getSquare(), 1);
+        List<Square> possibleSquare_2 = diag.move(board, this.getSquare(), 1);
 
         possibleSquare_1.addAll(possibleSquare_2);
 
         if (possibleSquare_1.contains(to)) {
+            this.hasMoved = true;
             return true;
         }
 

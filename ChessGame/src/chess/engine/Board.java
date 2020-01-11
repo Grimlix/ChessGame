@@ -10,7 +10,7 @@ import java.util.List;
 
 import static java.lang.StrictMath.abs;
 
-public class Board implements ChessController{
+public class Board implements ChessController {
 
     private Square[][] board;
     private ChessView view;
@@ -21,7 +21,7 @@ public class Board implements ChessController{
 
     private static final int BOARD_HEIGHT = 8;
     private static final int BOARD_LENGTH = 8;
-    private static final int BIG_CASTLE = 2;
+    private final int BIG_CASTLE = 2;
     private static final int SMALL_CASTLE = -2;
 
     //Constructor
@@ -31,6 +31,10 @@ public class Board implements ChessController{
         this.playerTurn = PlayerColor.WHITE;
     }
 
+    //Getter
+    public int getBIG_CASTLE() {
+        return BIG_CASTLE;
+    }
 
     //Getter
     public Square[][] getBoard() {
@@ -49,28 +53,6 @@ public class Board implements ChessController{
         this.view = view;
         view.startView();
 
-        ChessView.UserChoice test = new ChessView.UserChoice() {
-            @Override
-            public String textValue() {
-                return "ROOK";
-            }
-        };
-
-        ChessView.UserChoice reponse = new ChessView.UserChoice() {
-            @Override
-            public String textValue() {
-                return null;
-            }
-        };
-
-        System.out.println(test.textValue());
-
-        //créer 4 classes qui impléement UserChoice
-
-        reponse = view.askUser("Salut!", "Lequel veux-tu promouvoir ?", test);
-
-
-
         while (true) {
 
         }
@@ -85,11 +67,11 @@ public class Board implements ChessController{
         Square to = board[toX][toY];
 
         //if the source square is empty it won't work
-        if(moveFromEmptySquare(from)){
+        if (moveFromEmptySquare(from)) {
             return false;
         }
         //if wrong player is playing it won't work
-        if(!checkPlayerTurn(from)){
+        if (!checkPlayerTurn(from)) {
             return false;
         }
 
@@ -115,24 +97,24 @@ public class Board implements ChessController{
                 moveMaker(move.getTo(), move.getFrom());
 
                 if (isRock) {
-                    moveRook(from,to);
+                    moveRook(from, to);
                 }
 
                 //Display the new move and change the squares on the board
                 moveDisplay(from, to);
                 moveMaker(from, to);
 
-                if(!moves.isEmpty()  && isInPromotionState(moves.get(moves.size()-1))){
+                if (!moves.isEmpty() && isInPromotionState(moves.get(moves.size() - 1))) {
                     Piece promotePiece = null;
 
                     promotePiece = view.askUser("Salut!", "En quelle piece promouvoir ?",
-                            (Piece) new Bishop(to,to.getPiece().getColor(),PieceType.BISHOP),
-                            (Piece) new Knight(to,to.getPiece().getColor(),PieceType.KNIGHT),
-                            (Piece) new Queen(to,to.getPiece().getColor(),PieceType.QUEEN),
-                            (Piece) new Rook(to,to.getPiece().getColor(),PieceType.ROOK));
+                            (Piece) new Bishop(to, to.getPiece().getColor(), PieceType.BISHOP),
+                            (Piece) new Knight(to, to.getPiece().getColor(), PieceType.KNIGHT),
+                            (Piece) new Queen(to, to.getPiece().getColor(), PieceType.QUEEN),
+                            (Piece) new Rook(to, to.getPiece().getColor(), PieceType.ROOK));
                     to.getPiece().getSquare().removePiece();
                     to.setPiece(promotePiece);
-                    moveDisplay(to,to);
+                    moveDisplay(to, to);
                 }
 
 
@@ -142,7 +124,6 @@ public class Board implements ChessController{
                 if (isCheck(playerTurn)) {
                     this.view.displayMessage("Echec !");
                 }
-
 
 
                 return true;
@@ -219,7 +200,7 @@ public class Board implements ChessController{
         this.view.putPiece(from.getPiece().getType(), from.getPiece().getColor(), to.getX(), to.getY());
     }
 
-    private boolean checkPlayerTurn(Square from){
+    private boolean checkPlayerTurn(Square from) {
         //Playing turn after turn, nobody can play more than once
         if (playerTurn == PlayerColor.WHITE) {
             if (from.getPiece().getColor() == PlayerColor.BLACK) {
@@ -235,7 +216,7 @@ public class Board implements ChessController{
         return true;
     }
 
-    private void changePlayerTurn(){
+    private void changePlayerTurn() {
         //Changing the player's turn
         if (playerTurn == PlayerColor.WHITE) {
             playerTurn = PlayerColor.BLACK;
@@ -244,7 +225,7 @@ public class Board implements ChessController{
         }
     }
 
-    private boolean moveFromEmptySquare(Square from){
+    private boolean moveFromEmptySquare(Square from) {
         if (from.getPiece() == null) {
             this.view.displayMessage("La case de départ est vide...");
             return true;
@@ -252,18 +233,18 @@ public class Board implements ChessController{
         return false;
     }
 
-    private void checkRock(Square from, Square to){
+    private void checkRock(Square from, Square to) {
         //Checking if there is a rock situation
         if (from.getPiece() instanceof King && ((King) from.getPiece()).isLegalRock(this, to)) {
             isRock = true;
         }
     }
 
-    private boolean isInPromotionState(Move lastMove){
-        if(lastMove.getTo().getPiece().getType() == PieceType.PAWN){
-            if(lastMove.getTo().getY() == 0 && lastMove.getTo().getPiece().getColor() == PlayerColor.BLACK){
+    private boolean isInPromotionState(Move lastMove) {
+        if (lastMove.getTo().getPiece().getType() == PieceType.PAWN) {
+            if (lastMove.getTo().getY() == 0 && lastMove.getTo().getPiece().getColor() == PlayerColor.BLACK) {
                 return true;
-            }else if(lastMove.getTo().getY() == 7 && lastMove.getTo().getPiece().getColor() == PlayerColor.WHITE){
+            } else if (lastMove.getTo().getY() == 7 && lastMove.getTo().getPiece().getColor() == PlayerColor.WHITE) {
                 return true;
             }
         }
@@ -271,9 +252,7 @@ public class Board implements ChessController{
     }
 
 
-
-
-    private void moveRook(Square from, Square to){
+    private void moveRook(Square from, Square to) {
         int distance = from.getX() - to.getX();
         isRock = false;
         switch (distance) {

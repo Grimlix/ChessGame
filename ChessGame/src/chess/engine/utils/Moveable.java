@@ -2,8 +2,6 @@ package chess.engine.utils;
 
 import chess.engine.Board;
 import chess.engine.Square;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public interface Moveable {

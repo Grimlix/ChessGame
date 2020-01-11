@@ -7,9 +7,6 @@ import chess.engine.utils.Diagonal;
 import chess.engine.utils.Horizontal_Vertical;
 import chess.engine.utils.Moveable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 abstract class Piece implements ChessView.UserChoice {
 
     private Square square;
@@ -18,7 +15,7 @@ abstract class Piece implements ChessView.UserChoice {
 
     private Moveable arr[];
 
-    public Piece(Square square, PlayerColor color, PieceType type){
+    public Piece(Square square, PlayerColor color, PieceType type) {
         this.color = color;
         this.square = square;
         this.type = type;
@@ -30,7 +27,7 @@ abstract class Piece implements ChessView.UserChoice {
 
         this.arr = new Moveable[2];
         this.arr[0] = diagonal;
-        this.arr[1]= horizontal_vertical;
+        this.arr[1] = horizontal_vertical;
     }
 
     public Moveable[] getArr() {
@@ -49,25 +46,20 @@ abstract class Piece implements ChessView.UserChoice {
         return square;
     }
 
-    public void move(Square square){
+    public void move(Square square) {
         this.square = square;
     }
 
-    public boolean isLegalMove(Board board,Square to) {
-        if(to.getPiece() != null){
-            if(to.getPiece().getColor() == this.color){
+    public boolean isLegalMove(Board board, Square to) {
+        if (to.getPiece() != null) {
+            if (to.getPiece().getColor() == this.color) {
                 return false;
-            }else{
+            } else {
                 return true;
             }
-        }else{
+        } else {
             return true;
         }
     }
-
-
-
-
-
 }
 

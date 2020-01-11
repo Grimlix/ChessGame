@@ -23,13 +23,11 @@ public class Queen extends Piece {
             return false;
         }
 
-        System.out.println("JE suis dans la rein");
-
         Moveable diag = this.getArr()[0];
         Moveable horizontal_vertical = this.getArr()[1];
 
-        List<Square> possibleSquare_1 = horizontal_vertical.move(board, this.getSquare(),7);
-        List<Square> possibleSquare_2 = diag.move(board, this.getSquare(),7);
+        List<Square> possibleSquare_1 = horizontal_vertical.move(board, this.getSquare(), 7);
+        List<Square> possibleSquare_2 = diag.move(board, this.getSquare(), 7);
 
         possibleSquare_1.addAll(possibleSquare_2);
 

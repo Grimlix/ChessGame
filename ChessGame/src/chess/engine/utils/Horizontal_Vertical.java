@@ -10,8 +10,6 @@ public class Horizontal_Vertical implements Moveable {
 
     public List<Square> move(Board board, Square from, int maxDist) {
 
-        System.out.println("Je suis dans horizontal");
-
         List<Square> squareList = new ArrayList<Square>();
 
         //vertical top

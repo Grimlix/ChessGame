@@ -16,13 +16,9 @@ public class Rook extends Piece {
         this.hasMoved = false;
     }
 
-
-
     public boolean getHasMoved() {
         return this.hasMoved;
     }
-
-
 
     public boolean isLegalMove(Board board, Square to) {
 
@@ -30,13 +26,12 @@ public class Rook extends Piece {
             return false;
         }
 
-        System.out.println("JE suis dans la tour");
-
         Moveable horizontal_vertical = this.getArr()[1];
         List<Square> possibleSquare = new ArrayList<Square>();
-        possibleSquare = horizontal_vertical.move(board, this.getSquare(),7);
+        possibleSquare = horizontal_vertical.move(board, this.getSquare(), 7);
 
         if (possibleSquare.contains(to)) {
+            this.hasMoved = true;
             return true;
         }
 
