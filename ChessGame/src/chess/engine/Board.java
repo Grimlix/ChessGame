@@ -97,7 +97,10 @@ public class Board implements ChessController {
                 moveMaker(move.getTo(), move.getFrom());
 
                 if (isRock) {
-                    moveRook(from, to);
+                   if(!moveRook(from, to)){
+                       view.displayMessage("Le chemin est mine d'echec.");
+                       return false;
+                   }
                 }
 
                 //Display the new move and change the squares on the board
@@ -116,7 +119,6 @@ public class Board implements ChessController {
                     to.setPiece(promotePiece);
                     moveDisplay(to, to);
                 }
-
 
                 changePlayerTurn();
 
@@ -252,23 +254,57 @@ public class Board implements ChessController {
     }
 
 
-    private void moveRook(Square from, Square to) {
+    private boolean moveRook(Square from, Square to) {
         int distance = from.getX() - to.getX();
-        isRock = false;
         switch (distance) {
             case BIG_CASTLE:
-                //Display the rook move and change the squares on the board
-                moveDisplay(this.board[0][from.getY()], this.board[3][from.getY()]);
-                moveMaker(this.board[0][from.getY()], this.board[3][from.getY()]);
+                Move moveKingLeft = new Move(from, this.board[from.getX() - 1][from.getY()], from.getPiece());
+                this.moves.add(moveKingLeft);
+                moveMaker(from, this.board[from.getX() - 1][from.getY()]);
+                if (!isCheck(playerTurn)) {
+                    //undo
+                    moveMaker(moveKingLeft.getTo(), moveKingLeft.getFrom());
+                    moves.remove(moveKingLeft);
+
+                    isRock = false;
+
+                    //Display the rook move and change the squares on the board
+                    moveDisplay(this.board[0][from.getY()], this.board[3][from.getY()]);
+                    moveMaker(this.board[0][from.getY()], this.board[3][from.getY()]);
+                }else{
+                    //undo
+                    moveMaker(moveKingLeft.getTo(), moveKingLeft.getFrom());
+                    moves.remove(moveKingLeft);
+                    return false;
+                }
                 break;
 
             case SMALL_CASTLE:
-                //Display the rook move and change the squares on the board
-                moveDisplay(this.board[7][from.getY()], this.board[5][from.getY()]);
-                moveMaker(this.board[7][from.getY()], this.board[5][from.getY()]);
+                Move moveKingRight = new Move(from, this.board[from.getX() + 1][from.getY()], from.getPiece());
+                this.moves.add(moveKingRight);
+
+                moveMaker(from, this.board[from.getX() + 1][from.getY()]);
+                if (!isCheck(playerTurn)) {
+                    //undo
+                    moveMaker(moveKingRight.getTo(), moveKingRight.getFrom());
+                    moves.remove(moveKingRight);
+
+                    isRock = false;
+
+                    //Display the rook move and change the squares on the board
+                    moveDisplay(this.board[7][from.getY()], this.board[5][from.getY()]);
+                    moveMaker(this.board[7][from.getY()], this.board[5][from.getY()]);
+                }else{
+                    //undo
+                    moveMaker(moveKingRight.getTo(), moveKingRight.getFrom());
+                    moves.remove(moveKingRight);
+                    return false;
+                }
                 break;
         }
+        return true;
     }
+
 
     /**
      * Empty the whole board and the view, creates all the pieces and the squares and places the pieces at the rigth
