@@ -212,15 +212,16 @@ public class Board implements ChessController {
 
      private void moveMaker(Square from, Square to){
 
-         this.view.removePiece(from.getX(), from.getY());
-         this.view.putPiece(from.getPiece().getType(), from.getPiece().getColor(), to.getX(), to.getY());
-
          //redo move
          from.getPiece().move(to);
          to.setPiece(from.getPiece());
          from.removePiece();
      }
 
+     private void moveDisplay(Square from, Square to){
+         this.view.removePiece(from.getX(), from.getY());
+         this.view.putPiece(from.getPiece().getType(), from.getPiece().getColor(), to.getX(), to.getY());
+     }
 
      @Override
      public boolean move(int fromX, int fromY, int toX, int toY) {
@@ -253,18 +254,12 @@ public class Board implements ChessController {
                Move move = new Move(from,to,from.getPiece());
                moves.add(move);
 
-               from.getPiece().move(to);
-               to.setPiece(from.getPiece());
-               from.removePiece();
+               moveMaker(from, to);
 
                if(!isCheck(playerTurn)){
 
                    //undo last move so it can be added to the view
-                   move.getTo().getPiece().move(move.getFrom());
-                   move.getFrom().setPiece(move.getTo().getPiece());
-                   move.getTo().removePiece();
-
-                   System.out.println(from.getY() - to.getY());
+                   moveMaker(move.getTo(), move.getFrom());
 
                    //if it's the king and the deplacement is == 2 there is a rock, we control that in isLegalMove from
                    //king already
@@ -274,15 +269,18 @@ public class Board implements ChessController {
                        int distance = from.getX() - to.getX();
                        switch(distance){
                            case 2 : //grand rock
+                               moveDisplay(this.board[0][fromY],  this.board[3][fromY]);
                                moveMaker(this.board[0][fromY],  this.board[3][fromY]);
                                break;
 
                            case -2 : //petit rock
+                               moveDisplay(this.board[7][fromY],  this.board[5][fromY]);
                                moveMaker(this.board[7][fromY],  this.board[5][fromY]);
                                break;
                        }
                    }
 
+                   moveDisplay(from, to);
                    moveMaker(from,  to);
 
 
@@ -300,9 +298,7 @@ public class Board implements ChessController {
                    return true;
                }else{
                    //Undo last move
-                   move.getTo().getPiece().move(move.getFrom());
-                   move.getFrom().setPiece(move.getTo().getPiece());
-                   move.getTo().removePiece();
+                   moveMaker(move.getTo(), move.getFrom());
                    moves.remove(move);
                    this.view.displayMessage("Ca vous mets en echec !");
                    return false;
