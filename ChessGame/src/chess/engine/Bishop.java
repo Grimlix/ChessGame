@@ -18,6 +18,12 @@ public class Bishop extends Piece {
         return false;
     }
 
+
+    //des methodes en plus car il y a trop de répétitions dans le code
+    //faire un tableau dans la methode
+    //éven
+
+
     private boolean isThereAPieceBetween(Board board, Square to) {
         int fromX = getSquare().getX();
         int fromY = getSquare().getY();
@@ -68,7 +74,9 @@ public class Bishop extends Piece {
     }
 
     //check if to is in Diagonal Square from Rook
+    //changer le code pour le simplifier
     private boolean isToInDiagonalSquare(Square to) {
+
         int fromX = getSquare().getX();
         int fromY = getSquare().getY();
         int toX = to.getX();

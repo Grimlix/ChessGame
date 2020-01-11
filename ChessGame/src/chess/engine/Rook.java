@@ -17,6 +17,7 @@ public class Rook extends Piece {
     }
 
     //check if to is either in an Horizontal or Vertical Square from Rook
+    //deltaX == 0 and deltaY != 0 || deltaX != 0 and deltaY == 0
     private boolean isToInHorizontalVerticalSquare(Square to) {
         if (getSquare().getX() == to.getX() && getSquare().getY() != to.getY()
                 || getSquare().getX() != to.getX() && getSquare().getY() == to.getY()) {

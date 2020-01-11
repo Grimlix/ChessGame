@@ -19,11 +19,17 @@ public class King extends Piece {
         return this.hasMoved;
     }
 
+
+    //extraire dans des methodes static privée de la classe
+    //classe publique avec que des methodes static comme ca on a pas besoin d'instancier
+
+
+    //verifier que les cases sur lesquelles le roi se deplace ne sont pas en echecs
     public boolean isLegalRock(Board board, Square to) {
         //if King didnt move yet
         if (!this.hasMoved) {
             if (abs(to.getX() - getSquare().getX()) == 2) {
-                if (to.getX() < getSquare().getX()) { //big castling
+                if (to.getX() < getSquare().getX()) { //big castle
                     if (board.getBoard()[0][getSquare().getY()].getPiece() instanceof Rook) {//check if tower is at it place
                         //check if tower has moved
                         if (!((Rook) board.getBoard()[0][getSquare().getY()].getPiece()).getHasMoved()) {
@@ -36,7 +42,7 @@ public class King extends Piece {
                             return true;
                         }
                     }
-                } else { //small castling
+                } else { //small castle
                     if (board.getBoard()[7][getSquare().getY()].getPiece() instanceof Rook) {//chef if tower is at it place
                         //check if tower has moved
                         if (!((Rook) board.getBoard()[7][getSquare().getY()].getPiece()).getHasMoved()) {
@@ -55,6 +61,7 @@ public class King extends Piece {
         return false;
     }
 
+    //factoriser avec deltaX detlaY
     public boolean isLegalMove(Board board, Square to) {
 
         if (!super.isLegalMove(board, to)) {

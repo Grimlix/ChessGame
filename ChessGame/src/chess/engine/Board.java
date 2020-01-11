@@ -10,7 +10,7 @@ import java.util.List;
 
 import static java.lang.StrictMath.abs;
 
-public class Board implements ChessController {
+public class Board implements ChessController{
 
     private Square[][] board;
     private ChessView view;
@@ -31,6 +31,7 @@ public class Board implements ChessController {
         this.playerTurn = PlayerColor.WHITE;
     }
 
+
     //Getter
     public Square[][] getBoard() {
         return board;
@@ -49,7 +50,7 @@ public class Board implements ChessController {
         view.startView();
 
 
-
+        PieceType[] piecetype = new PieceType[5];
 
         ChessView.UserChoice test = new ChessView.UserChoice() {
             @Override
@@ -67,7 +68,9 @@ public class Board implements ChessController {
 
         System.out.println(test.textValue());
 
-        reponse = view.askUser("Salut!", "Lequel veux-tu promouvoir ?", test);
+        //créer 4 classes qui impléement UserChoice
+
+        reponse = view.askUser("Salut!", "Lequel veux-tu promouvoir ?", piecetype);
 
 
 
@@ -75,6 +78,8 @@ public class Board implements ChessController {
 
         }
     }
+
+    //extraire des parties dans des methodes static privées de Board si elles ne prennent pas de paramètres
 
     @Override
     public boolean move(int fromX, int fromY, int toX, int toY) {

@@ -22,6 +22,9 @@ public class Knight extends Piece {
             return false;
         }
 
+
+        //verifier avec des delta x et des detla y
+
         int[][] possibleMoves = new int[8][2];
         possibleMoves[0][0] = getSquare().getX() + 1;
         possibleMoves[0][1] = getSquare().getY() + 2;

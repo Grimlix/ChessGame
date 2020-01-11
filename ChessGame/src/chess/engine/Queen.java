@@ -22,6 +22,8 @@ public class Queen extends Piece{
         return false;
     }
 
+
+
     //check if to is either in an Horizontal or Vertical Square from Queen
     private boolean isToInHorizontalVerticalSquare(Square to) {
         if (getSquare().getX() == to.getX() && getSquare().getY() != to.getY()

@@ -41,6 +41,7 @@ public interface ChessView {
     String textValue();
   }
 
+
   /**
    * Demande à la vue de proposer un choix à l'utilisateur parmi les options fournies.
    * @param title le titre de la requête.
