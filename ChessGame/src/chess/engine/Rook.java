@@ -65,6 +65,7 @@ public class Rook extends Piece {
 
     public boolean isLegalMove(Board board, Square to) {
         if (super.isLegalMove(board, to) && isToInHorizontalVerticalSquare(to) && isThereAPieceBetween(board, to)) {
+            this.hasMoved = true;
             return true;
         } else {
             return false;

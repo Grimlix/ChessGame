@@ -51,7 +51,6 @@ public class King extends Piece {
                     }
                 }
             }
-
         }
         return false;
     }
@@ -68,6 +67,7 @@ public class King extends Piece {
         int distY_neg = this.getSquare().getY() - DISTANCE_MAX;
 
         if (to.getX() < distX && to.getX() > distX_neg && to.getY() < distY && to.getY() > distY_neg) {
+            this.hasMoved = true;
             return true;
         }
 

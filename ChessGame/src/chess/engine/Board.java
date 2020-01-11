@@ -58,9 +58,16 @@ public class Board implements ChessController {
             }
         };
 
+        ChessView.UserChoice reponse = new ChessView.UserChoice() {
+            @Override
+            public String textValue() {
+                return null;
+            }
+        };
+
         System.out.println(test.textValue());
 
-        view.askUser("Salut!", "Lequel veux-tu promouvoir ?", test);
+        reponse = view.askUser("Salut!", "Lequel veux-tu promouvoir ?", test);
 
 
 
