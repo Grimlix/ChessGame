@@ -24,6 +24,8 @@ public class Board implements ChessController {
     private final int BIG_CASTLE = 2;
     private static final int SMALL_CASTLE = -2;
 
+
+
     //Constructor
     public Board() {
         this.board = new Square[BOARD_LENGTH][BOARD_HEIGHT];
@@ -39,6 +41,10 @@ public class Board implements ChessController {
     //Getter
     public Square[][] getBoard() {
         return board;
+    }
+
+    public int getSmallCastle(){
+        return SMALL_CASTLE;
     }
 
     @Override
@@ -101,6 +107,7 @@ public class Board implements ChessController {
                        view.displayMessage("Le chemin est mine d'echec.");
                        return false;
                    }
+                   isRock = false;
                 }
 
                 //Display the new move and change the squares on the board
@@ -266,8 +273,6 @@ public class Board implements ChessController {
                     moveMaker(moveKingLeft.getTo(), moveKingLeft.getFrom());
                     moves.remove(moveKingLeft);
 
-                    isRock = false;
-
                     //Display the rook move and change the squares on the board
                     moveDisplay(this.board[0][from.getY()], this.board[3][from.getY()]);
                     moveMaker(this.board[0][from.getY()], this.board[3][from.getY()]);
@@ -289,7 +294,6 @@ public class Board implements ChessController {
                     moveMaker(moveKingRight.getTo(), moveKingRight.getFrom());
                     moves.remove(moveKingRight);
 
-                    isRock = false;
 
                     //Display the rook move and change the squares on the board
                     moveDisplay(this.board[7][from.getY()], this.board[5][from.getY()]);

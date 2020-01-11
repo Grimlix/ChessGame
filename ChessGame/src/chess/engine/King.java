@@ -36,8 +36,10 @@ public class King extends Piece {
         int distance = this.getSquare().getX() - to.getX();
         if (distance == board.getBIG_CASTLE()) {
             return checkRook(board, 0, 1, 4);
-        } else {
+        } else if(distance == board.getSmallCastle()){
             return checkRook(board, 7, 5, 7);
+        }else{
+            return false;
         }
     }
 
