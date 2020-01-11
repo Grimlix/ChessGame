@@ -70,7 +70,6 @@ public class Board implements ChessController{
 
         //créer 4 classes qui impléement UserChoice
 
-        reponse = view.askUser("Salut!", "Lequel veux-tu promouvoir ?", piecetype);
 
 
 
@@ -80,6 +79,7 @@ public class Board implements ChessController{
     }
 
     //extraire des parties dans des methodes static privées de Board si elles ne prennent pas de paramètres
+    //juste privé si paramètres
 
     @Override
     public boolean move(int fromX, int fromY, int toX, int toY) {

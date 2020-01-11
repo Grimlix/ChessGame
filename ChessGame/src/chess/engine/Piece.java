@@ -2,6 +2,12 @@ package chess.engine;
 
 import chess.PieceType;
 import chess.PlayerColor;
+import chess.engine.utils.Diagonal;
+import chess.engine.utils.Horizontal_Vertical;
+import chess.engine.utils.Moveable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 abstract class Piece {
 
@@ -9,10 +15,22 @@ abstract class Piece {
     private PieceType type;
     private PlayerColor color;
 
+    private Moveable arr[];
+
     public Piece(Square square, PlayerColor color, PieceType type){
         this.color = color;
         this.square = square;
         this.type = type;
+
+        Moveable diagonal = new Diagonal(this.square);
+        Moveable horizontal_vertical = new Horizontal_Vertical(this.square);
+
+        this.arr[0] = diagonal;
+        this.arr[1]= horizontal_vertical;
+    }
+
+    public Moveable[] getArr() {
+        return arr;
     }
 
     public PlayerColor getColor() {
