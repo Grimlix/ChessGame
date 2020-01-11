@@ -10,63 +10,47 @@ import static java.lang.StrictMath.abs;
 
 public class Diagonal implements Moveable{
 
-    private Square from;
-
-    public Diagonal(Square from) {
-        this.from = from;
-    }
-
-    public List<Square> move(Board board, Square to){
+    public List<Square> move(Board board,Square from){
 
         List<Square> squareList = new ArrayList<Square>();
-        int counter = 0;
 
-        if(from != null){
-            int fromX = from.getX();
-            int fromY = from.getY();
-            int toX = to.getX();
-            int toY = to.getY();
-
-            int posXDiff = abs(fromX - toX);
-
-            posXDiff--;
-            //right diagonals
-            if (toX > fromX) {
-                //top right diagonal
-                if (toY > fromY) {
-                    while (posXDiff != 0) {
-                        if (board.getBoard()[fromX + posXDiff][fromY + posXDiff].getPiece() == null) {
-                            squareList.set(counter++, board.getBoard()[fromX + posXDiff][fromY + posXDiff]);
-                        }
-                        posXDiff--;
-                    }
-                } else {//bottom right diagonal
-                    while (posXDiff != 0) {
-                        if (board.getBoard()[fromX + posXDiff][fromY - posXDiff].getPiece() == null) {
-                            squareList.set(counter++, board.getBoard()[fromX + posXDiff][fromY - posXDiff]);
-                        }
-                        posXDiff--;
-                    }
-                }
-            } else { //left diagonals
-                //top left diagonal
-                if (toY > fromY) {
-                    while (posXDiff != 0) {
-                        if (board.getBoard()[fromX - posXDiff][fromY + posXDiff].getPiece() == null) {
-                            squareList.set(counter++, board.getBoard()[fromX - posXDiff][fromY + posXDiff]);
-                        }
-                        posXDiff--;
-                    }
-                } else {//bottom left diagonal
-                    while (posXDiff != 0) {
-                        if (board.getBoard()[fromX - posXDiff][fromY - posXDiff].getPiece() == null) {
-                            squareList.set(counter++, board.getBoard()[fromX - posXDiff][fromY - posXDiff]);
-                        }
-                        posXDiff--;
-                    }
-                }
+        //top right diagonal
+        int counter = 1;
+        for(int i = from.getX() + 1, j = from.getY() + 1; i <= 7 && j <= 7;i++,j++){
+            squareList.add(board.getBoard()[from.getX() + counter][from.getY() + counter]);
+            if(board.getBoard()[from.getX() + counter][from.getY() + counter].getPiece() != null){
+                break;
             }
+            counter++;
         }
+        //bottom right diagonal
+        counter = 1;
+        for(int i = from.getX() + 1, j = from.getY() - 1; i <= 7 && j >= 0;i++,j--){
+            squareList.add(board.getBoard()[from.getX() + counter][from.getY() - counter]);
+            if(board.getBoard()[from.getX() + counter][from.getY() - counter].getPiece() != null){
+                break;
+            }
+            counter++;
+        }
+        //top left diagonal
+        counter = 1;
+        for(int i = from.getX() - 1, j = from.getY() + 1; i >= 0 && j <= 7;i--,j++){
+            squareList.add(board.getBoard()[from.getX() - counter][from.getY() + counter]);
+            if(board.getBoard()[from.getX() - counter][from.getY() + counter].getPiece() != null){
+                break;
+            }
+            counter++;
+        }
+        //bottom left diagonal
+        counter = 1;
+        for(int i = from.getX() - 1, j = from.getY() - 1; i >= 0 && j >= 7;i--,j--){
+            squareList.add(board.getBoard()[from.getX() - counter][from.getY() - counter]);
+            if(board.getBoard()[from.getX() - counter][from.getY() - counter].getPiece() != null){
+                break;
+            }
+            counter++;
+        }
+
         return squareList;
     }
 

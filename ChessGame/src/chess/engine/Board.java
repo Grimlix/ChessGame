@@ -16,13 +16,13 @@ public class Board implements ChessController{
     private ChessView view;
     private PlayerColor playerTurn;
     private List<Move> moves;
-
     private boolean isRock = false;
+
 
     private static final int BOARD_HEIGHT = 8;
     private static final int BOARD_LENGTH = 8;
-    private static final int BIG_CASTLING = 2;
-    private static final int SMALL_CASTLING = -2;
+    private static final int BIG_CASTLE = 2;
+    private static final int SMALL_CASTLE = -2;
 
     //Constructor
     public Board() {
@@ -49,9 +49,6 @@ public class Board implements ChessController{
         this.view = view;
         view.startView();
 
-
-        PieceType[] piecetype = new PieceType[5];
-
         ChessView.UserChoice test = new ChessView.UserChoice() {
             @Override
             public String textValue() {
@@ -70,6 +67,7 @@ public class Board implements ChessController{
 
         //créer 4 classes qui impléement UserChoice
 
+        reponse = view.askUser("Salut!", "Lequel veux-tu promouvoir ?", test);
 
 
 
@@ -79,7 +77,6 @@ public class Board implements ChessController{
     }
 
     //extraire des parties dans des methodes static privées de Board si elles ne prennent pas de paramètres
-    //juste privé si paramètres
 
     @Override
     public boolean move(int fromX, int fromY, int toX, int toY) {
@@ -88,22 +85,12 @@ public class Board implements ChessController{
         Square to = board[toX][toY];
 
         //if the source square is empty it won't work
-        if (from.getPiece() == null) {
-            this.view.displayMessage("La case de départ est vide...");
+        if(moveFromEmptySquare(from)){
             return false;
         }
-
-        //Playing turn after turn, nobody can play more than once
-        if (playerTurn == PlayerColor.WHITE) {
-            if (from.getPiece().getColor() == PlayerColor.BLACK) {
-                view.displayMessage("C'est aux blancs de jouer !");
-                return false;
-            }
-        } else {
-            if (from.getPiece().getColor() == PlayerColor.WHITE) {
-                view.displayMessage("C'est aux noirs de jouer !");
-                return false;
-            }
+        //if wrong player is playing it won't work
+        if(!checkPlayerTurn(from)){
+            return false;
         }
 
         //Checking if there is a rock situation
@@ -128,38 +115,30 @@ public class Board implements ChessController{
                 moveMaker(move.getTo(), move.getFrom());
 
                 if (isRock) {
-                    int distance = from.getX() - to.getX();
-                    isRock = false;
-                    switch (distance) {
-                        case BIG_CASTLING:
-                            //Display the rook move and change the squares on the board
-                            moveDisplay(this.board[0][fromY], this.board[3][fromY]);
-                            moveMaker(this.board[0][fromY], this.board[3][fromY]);
-                            break;
-
-                        case SMALL_CASTLING:
-                            //Display the rook move and change the squares on the board
-                            moveDisplay(this.board[7][fromY], this.board[5][fromY]);
-                            moveMaker(this.board[7][fromY], this.board[5][fromY]);
-                            break;
-                    }
+                    moveRook(from,to);
                 }
 
                 //Display the new move and change the squares on the board
                 moveDisplay(from, to);
                 moveMaker(from, to);
 
-                //Changing the player's turn
-                if (playerTurn == PlayerColor.WHITE) {
-                    playerTurn = PlayerColor.BLACK;
-                } else {
-                    playerTurn = PlayerColor.WHITE;
-                }
+                changePlayerTurn();
 
                 //Check if the move made a check situation
                 if (isCheck(playerTurn)) {
                     this.view.displayMessage("Echec !");
                 }
+
+                if(!moves.isEmpty()  && isInPromotionState(moves.get(moves.size()-1))){
+                    view.displayMessage("Je suis en etat de promotion");
+                    askUserBishop askBishop = new askUserBishop();
+                    askUserKnight askKnight = new askUserKnight();
+                    askUserRook askRook = new askUserRook();
+                    askUserQueen askQueen = new askUserQueen();
+                    view.askUser("Salut!", "Lequel veux-tu promouvoir ?", askBishop,askKnight,askQueen,askRook);
+
+                }
+
                 return true;
             } else {
                 //Undo last move
@@ -173,6 +152,8 @@ public class Board implements ChessController{
             this.view.displayMessage("Move Impossible : Interdit.");
             return false;
         }
+
+
     }
 
     /**
@@ -232,6 +213,88 @@ public class Board implements ChessController{
         this.view.putPiece(from.getPiece().getType(), from.getPiece().getColor(), to.getX(), to.getY());
     }
 
+    private boolean checkPlayerTurn(Square from){
+        //Playing turn after turn, nobody can play more than once
+        if (playerTurn == PlayerColor.WHITE) {
+            if (from.getPiece().getColor() == PlayerColor.BLACK) {
+                view.displayMessage("C'est aux blancs de jouer !");
+                return false;
+            }
+        } else {
+            if (from.getPiece().getColor() == PlayerColor.WHITE) {
+                view.displayMessage("C'est aux noirs de jouer !");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void changePlayerTurn(){
+        //Changing the player's turn
+        if (playerTurn == PlayerColor.WHITE) {
+            playerTurn = PlayerColor.BLACK;
+        } else {
+            playerTurn = PlayerColor.WHITE;
+        }
+    }
+
+    private boolean moveFromEmptySquare(Square from){
+        if (from.getPiece() == null) {
+            this.view.displayMessage("La case de départ est vide...");
+            return true;
+        }
+        return false;
+    }
+
+    private void checkRock(Square from, Square to){
+        //Checking if there is a rock situation
+        if (from.getPiece() instanceof King && ((King) from.getPiece()).isLegalRock(this, to)) {
+            isRock = true;
+        }
+    }
+
+    private boolean isInPromotionState(Move lastMove){
+
+        if(lastMove.getTo().getPiece().getType() == PieceType.PAWN) {
+            System.out.println("In Promotion State");
+            if (lastMove.getTo().getY() == 0) {
+                System.out.println("Ouai");
+                if (lastMove.getTo().getPiece().getColor() == PlayerColor.BLACK) {
+                    System.out.println("Ouai ouai");
+                    return true;
+                }
+            }
+        }else if(lastMove.getTo().getY() == 7){
+            System.out.println("Non");
+            if(lastMove.getTo().getPiece().getColor() == PlayerColor.WHITE){
+                System.out.println("Non non");
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+
+
+
+    private void moveRook(Square from, Square to){
+        int distance = from.getX() - to.getX();
+        isRock = false;
+        switch (distance) {
+            case BIG_CASTLE:
+                //Display the rook move and change the squares on the board
+                moveDisplay(this.board[0][from.getY()], this.board[3][from.getY()]);
+                moveMaker(this.board[0][from.getY()], this.board[3][from.getY()]);
+                break;
+
+            case SMALL_CASTLE:
+                //Display the rook move and change the squares on the board
+                moveDisplay(this.board[7][from.getY()], this.board[5][from.getY()]);
+                moveMaker(this.board[7][from.getY()], this.board[5][from.getY()]);
+                break;
+        }
+    }
 
     /**
      * Empty the whole board and the view, creates all the pieces and the squares and places the pieces at the rigth

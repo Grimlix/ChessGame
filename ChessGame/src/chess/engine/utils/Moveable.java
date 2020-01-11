@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface Moveable {
 
-    List<Square> move(Board board, Square to);
+    List<Square> move(Board board, Square from);
 
 
 

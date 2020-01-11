@@ -24,8 +24,8 @@ abstract class Piece {
 
         this.arr = new Moveable[2];
 
-        Moveable diagonal = new Diagonal(this.square);
-        Moveable horizontal_vertical = new Horizontal_Vertical(this.square);
+        Moveable diagonal = new Diagonal();
+        Moveable horizontal_vertical = new Horizontal_Vertical();
 
         this.arr[0] = diagonal;
         this.arr[1]= horizontal_vertical;

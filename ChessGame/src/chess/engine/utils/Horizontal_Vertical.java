@@ -8,55 +8,53 @@ import java.util.List;
 
 public class Horizontal_Vertical implements Moveable {
 
-    private Square from;
+    public List<Square> move(Board board, Square from) {
 
-    public Horizontal_Vertical(Square from) {
-        this.from = from;
-    }
-
-    public List<Square> move(Board board, Square to) {
+        System.out.println("Je suis dans horizontal");
 
         List<Square> squareList = new ArrayList<Square>();
-        int counter = 0;
 
-        if(from != null){
-            if (from.getX() == to.getX()) {
-                int i = from.getX();
-                if (from.getY() > to.getY()) {
-                    for (int j = from.getY() - 1; j > to.getY(); j--) {
-                        if (board.getBoard()[i][j].getPiece() == null) {
-                            squareList.set(counter++, board.getBoard()[i][j]);
-                        }
-                    }
-                } else {
-                    for (int j = from.getY() + 1; j < to.getY(); j++) {
-                        if (board.getBoard()[i][j].getPiece() == null) {
-                            squareList.set(counter++, board.getBoard()[i][j]);
-                        }
-                    }
-                }
-            } else {
-                int j = from.getY();
-                if (from.getX() > to.getX()) {
-                    for (int i = from.getX() - 1; i > to.getX(); i--) {
-                        if (board.getBoard()[i][j].getPiece() == null) {
-                            squareList.set(counter++, board.getBoard()[i][j]);
-                        }
-                    }
-                } else {
-                    for (int i = from.getX() + 1; i < to.getX(); i++) {
-                        if (board.getBoard()[i][j].getPiece() == null) {
-                            squareList.set(counter++, board.getBoard()[i][j]);
-                        }
-                    }
-                }
+        //vertical top
+        for (int i = from.getY() + 1; i <= 7; i++) {
+            //add the square to the list
+            squareList.add(board.getBoard()[from.getX()][i]);
+            //if the square has a piece we leave this way
+            if (board.getBoard()[from.getX()][i].getPiece() != null) {
+                break;
+            }
+        }
+
+        //vertical down
+        for (int i = from.getY() - 1; i >= 0; i--) {
+            //add the square to the list
+            squareList.add(board.getBoard()[from.getX()][i]);
+            //if the square has a piece we leave this way
+            if (board.getBoard()[from.getX()][i].getPiece() != null) {
+                break;
+            }
+        }
+
+        //horizontal left
+        for (int i = from.getX() - 1; i >= 0; i--) {
+            //add the square to the list
+            squareList.add(board.getBoard()[i][from.getY()]);
+            //if the square has a piece we leave this way
+            if (board.getBoard()[i][from.getY()].getPiece() != null) {
+                break;
+            }
+        }
+
+        //horizontal right
+        for (int i = from.getX() + 1; i <= 7; i++) {
+            //add the square to the list
+            squareList.add(board.getBoard()[i][from.getY()]);
+            //if the square has a piece we leave this way
+            if (board.getBoard()[i][from.getY()].getPiece() != null) {
+                break;
             }
         }
 
         return squareList;
     }
-
-
-
 
 }
