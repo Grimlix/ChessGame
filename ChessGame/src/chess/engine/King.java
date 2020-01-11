@@ -20,9 +20,9 @@ public class King extends Piece{
         return this.hasMoved;
     }
 
-    private boolean isLegalRock(Board board, Square to){
+    public boolean isLegalRock(Board board, Square to){
         //if King didnt move yet
-        if(!hasMoved){
+        if(!this.hasMoved){
             if(abs(to.getX() - getSquare().getX()) == 2){
                 if(to.getX() < getSquare().getX()) {//grand roque
                     if (board.getBoard()[0][getSquare().getY()].getPiece() instanceof Rook) {//check if tower is at it place
@@ -61,10 +61,6 @@ public class King extends Piece{
 
         if (!super.isLegalMove(board, to)) {
             return false;
-        }
-
-        if(isLegalRock(board,to)){
-            return true;
         }
 
         int distX = this.getSquare().getX() + DISTANCE_MAX;

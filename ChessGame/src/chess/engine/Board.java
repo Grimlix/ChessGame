@@ -23,6 +23,7 @@ public class Board implements ChessController {
      private final int BOARD_HEIGHT = 8;
      private final int BOARD_LENGTH = 8;
      private PlayerColor playerTurn;
+     private boolean isRock = false;
 
     private List<Move> moves;
 
@@ -38,8 +39,7 @@ public class Board implements ChessController {
      }
 
      private Square getKingPos(PlayerColor color){
-         for(Square[] x: board)
-         {
+         for(Square[] x: board) {
              for(Square y : x){
                  if(y.getPiece() != null && y.getPiece().getType() == PieceType.KING && y.getPiece().getColor() == color){
                      return y;
@@ -51,10 +51,10 @@ public class Board implements ChessController {
 
      private boolean isCheck(PlayerColor color){
          Square king = getKingPos(color);
-         for(Square[] x: board)
-         {
+         for(Square[] x: board){
              for(Square y : x){
-                if(y.getPiece() != null && y.getPiece().isLegalMove(this,king)){
+                if(y.getPiece() != null && y.getPiece().getColor() != color && y.getPiece().isLegalMove(this,king)){
+                    System.out.println("Le salaud qui me met en echec de l'espace : " + y.getPiece() + " couleur : " + y.getPiece().getColor() + " coordonnée : " + y.getY() + ":" + y.getX());
                     return true;
                 }
              }
@@ -209,10 +209,7 @@ public class Board implements ChessController {
           }
      }
 
-
      private void moveMaker(Square from, Square to){
-
-         //redo move
          from.getPiece().move(to);
          to.setPiece(from.getPiece());
          from.removePiece();
@@ -222,6 +219,7 @@ public class Board implements ChessController {
          this.view.removePiece(from.getX(), from.getY());
          this.view.putPiece(from.getPiece().getType(), from.getPiece().getColor(), to.getX(), to.getY());
      }
+
 
      @Override
      public boolean move(int fromX, int fromY, int toX, int toY) {
@@ -247,14 +245,25 @@ public class Board implements ChessController {
                }
           }
 
+         if(from.getPiece() instanceof King && ((King) from.getPiece()).isLegalRock(this,to)){
+                isRock = true;
+         }
+
+
           //Checking if the piece allows the move, if true we change the player's turn and
           //the view. Otherwise returns false.
-          if(from.getPiece().isLegalMove(this,to)){
+          if(from.getPiece().isLegalMove(this,to) || isRock){
 
                Move move = new Move(from,to,from.getPiece());
                moves.add(move);
 
+               System.out.println("My position before : " + from.getX() + ":" + from.getY());
+
+
                moveMaker(from, to);
+
+
+              System.out.println("My position after : " + to.getX() + ":" + to.getY());
 
                if(!isCheck(playerTurn)){
 
@@ -264,25 +273,26 @@ public class Board implements ChessController {
                    //if it's the king and the deplacement is == 2 there is a rock, we control that in isLegalMove from
                    //king already
                    if(from.getPiece().getType() == PieceType.KING && abs(from.getX() - to.getX()) == 2){
-                       System.out.println("On y crois");
-                       //vrify if the way is checked or not
                        int distance = from.getX() - to.getX();
+                       isRock = false;
                        switch(distance){
                            case 2 : //grand rock
+                               //Display the new move and change the squares on the board
                                moveDisplay(this.board[0][fromY],  this.board[3][fromY]);
                                moveMaker(this.board[0][fromY],  this.board[3][fromY]);
                                break;
 
                            case -2 : //petit rock
+                               //Display the new move and change the squares on the board
                                moveDisplay(this.board[7][fromY],  this.board[5][fromY]);
                                moveMaker(this.board[7][fromY],  this.board[5][fromY]);
                                break;
                        }
                    }
 
+                   //Display the new move and change the squares on the board
                    moveDisplay(from, to);
                    moveMaker(from,  to);
-
 
                    //Changing the player's turn
                    if(playerTurn == PlayerColor.WHITE){
@@ -291,10 +301,10 @@ public class Board implements ChessController {
                        playerTurn = PlayerColor.WHITE;
                    }
 
+                   //Check if the move made an echec
                    if(isCheck(playerTurn)){
-                       this.view.displayMessage("Echec");
+                       this.view.displayMessage("Echec !");
                    }
-
                    return true;
                }else{
                    //Undo last move
