@@ -3,6 +3,8 @@ package chess.engine;
 import chess.PieceType;
 import chess.PlayerColor;
 
+import static java.lang.StrictMath.abs;
+
 public class Knight extends Piece {
 //    private static final PieceType type = PieceType.KNIGHT;
 
@@ -20,42 +22,10 @@ public class Knight extends Piece {
             return false;
         }
 
+        int deltaX = abs(getSquare().getX() - to.getX());
+        int deltaY = abs(getSquare().getY() - to.getY());
 
-        //verifier avec des delta x et des detla y
+        return deltaX == 2 && deltaY == 1 || deltaX == 1 && deltaY == 2;
 
-        int[][] possibleMoves = new int[8][2];
-        possibleMoves[0][0] = getSquare().getX() + 1;
-        possibleMoves[0][1] = getSquare().getY() + 2;
-
-        possibleMoves[1][0] = getSquare().getX() + 2;
-        possibleMoves[1][1] = getSquare().getY() + 1;
-
-        possibleMoves[2][0] = getSquare().getX() + 2;
-        possibleMoves[2][1] = getSquare().getY() - 1;
-
-        possibleMoves[3][0] = getSquare().getX() + 1;
-        possibleMoves[3][1] = getSquare().getY() - 2;
-
-        possibleMoves[4][0] = getSquare().getX() - 1;
-        possibleMoves[4][1] = getSquare().getY() - 2;
-
-        possibleMoves[5][0] = getSquare().getX() - 2;
-        possibleMoves[5][1] = getSquare().getY() - 1;
-
-        possibleMoves[6][0] = getSquare().getX() - 2;
-        possibleMoves[6][1] = getSquare().getY() + 1;
-
-        possibleMoves[7][0] = getSquare().getX() - 1;
-        possibleMoves[7][1] = getSquare().getY() + 2;
-
-        boolean isInPossibleMoves = false;
-
-        for(int i = 0; i < 8; i++){
-            if(possibleMoves[i][0] == to.getX() && possibleMoves[i][1] == to.getY()){
-                isInPossibleMoves = true;
-            }
-        }
-
-        return isInPossibleMoves;
     }
 }

@@ -43,7 +43,7 @@ public class Diagonal implements Moveable{
         }
         //bottom left diagonal
         counter = 1;
-        for(int i = from.getX() - 1, j = from.getY() - 1; i >= 0 && j >= 7;i--,j--){
+        for(int i = from.getX() - 1, j = from.getY() - 1; i >= 0 && j >= 0;i--,j--){
             squareList.add(board.getBoard()[from.getX() - counter][from.getY() - counter]);
             if(board.getBoard()[from.getX() - counter][from.getY() - counter].getPiece() != null){
                 break;
