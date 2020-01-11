@@ -122,6 +122,20 @@ public class Board implements ChessController{
                 moveDisplay(from, to);
                 moveMaker(from, to);
 
+                if(!moves.isEmpty()  && isInPromotionState(moves.get(moves.size()-1))){
+                    Piece promotePiece = null;
+
+                    promotePiece = view.askUser("Salut!", "En quelle piece promouvoir ?",
+                            (Piece) new Bishop(to,to.getPiece().getColor(),PieceType.BISHOP),
+                            (Piece) new Knight(to,to.getPiece().getColor(),PieceType.KNIGHT),
+                            (Piece) new Queen(to,to.getPiece().getColor(),PieceType.QUEEN),
+                            (Piece) new Rook(to,to.getPiece().getColor(),PieceType.ROOK));
+                    to.getPiece().getSquare().removePiece();
+                    to.setPiece(promotePiece);
+                    moveDisplay(to,to);
+                }
+
+
                 changePlayerTurn();
 
                 //Check if the move made a check situation
@@ -129,15 +143,7 @@ public class Board implements ChessController{
                     this.view.displayMessage("Echec !");
                 }
 
-                if(!moves.isEmpty()  && isInPromotionState(moves.get(moves.size()-1))){
-                    view.displayMessage("Je suis en etat de promotion");
-                    askUserBishop askBishop = new askUserBishop();
-                    askUserKnight askKnight = new askUserKnight();
-                    askUserRook askRook = new askUserRook();
-                    askUserQueen askQueen = new askUserQueen();
-                    view.askUser("Salut!", "Lequel veux-tu promouvoir ?", askBishop,askKnight,askQueen,askRook);
 
-                }
 
                 return true;
             } else {
@@ -254,25 +260,14 @@ public class Board implements ChessController{
     }
 
     private boolean isInPromotionState(Move lastMove){
-
-        if(lastMove.getTo().getPiece().getType() == PieceType.PAWN) {
-            System.out.println("In Promotion State");
-            if (lastMove.getTo().getY() == 0) {
-                System.out.println("Ouai");
-                if (lastMove.getTo().getPiece().getColor() == PlayerColor.BLACK) {
-                    System.out.println("Ouai ouai");
-                    return true;
-                }
-            }
-        }else if(lastMove.getTo().getY() == 7){
-            System.out.println("Non");
-            if(lastMove.getTo().getPiece().getColor() == PlayerColor.WHITE){
-                System.out.println("Non non");
+        if(lastMove.getTo().getPiece().getType() == PieceType.PAWN){
+            if(lastMove.getTo().getY() == 0 && lastMove.getTo().getPiece().getColor() == PlayerColor.BLACK){
+                return true;
+            }else if(lastMove.getTo().getY() == 7 && lastMove.getTo().getPiece().getColor() == PlayerColor.WHITE){
                 return true;
             }
         }
         return false;
-
     }
 
 

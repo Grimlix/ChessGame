@@ -17,6 +17,8 @@ public class Knight extends Piece {
         return type;
     }*/
 
+
+
     public boolean isLegalMove(Board board, Square to){
         if(!super.isLegalMove(board,to)){
             return false;
@@ -27,5 +29,15 @@ public class Knight extends Piece {
 
         return deltaX == 2 && deltaY == 1 || deltaX == 1 && deltaY == 2;
 
+    }
+
+    @Override
+    public String textValue() {
+        return "Knight";
+    }
+
+    @Override
+    public String toString() {
+        return textValue();
     }
 }

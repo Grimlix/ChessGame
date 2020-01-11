@@ -2,6 +2,10 @@ package chess.engine;
 
 import chess.PieceType;
 import chess.PlayerColor;
+import chess.engine.utils.Moveable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.StrictMath.abs;
 
@@ -14,6 +18,7 @@ public class King extends Piece {
         super(square, color, type);
         this.hasMoved = false;
     }
+
 
     private boolean getHasMoved() {
         return this.hasMoved;
@@ -68,16 +73,28 @@ public class King extends Piece {
             return false;
         }
 
-        int distX = this.getSquare().getX() + DISTANCE_MAX;
-        int distX_neg = this.getSquare().getX() - DISTANCE_MAX;
-        int distY = this.getSquare().getY() + DISTANCE_MAX;
-        int distY_neg = this.getSquare().getY() - DISTANCE_MAX;
+        Moveable diag = this.getArr()[0];
+        Moveable horizontal_vertical = this.getArr()[1];
 
-        if (to.getX() < distX && to.getX() > distX_neg && to.getY() < distY && to.getY() > distY_neg) {
-            this.hasMoved = true;
+        List<Square> possibleSquare_1 = horizontal_vertical.move(board, this.getSquare(),1);
+        List<Square> possibleSquare_2 = diag.move(board, this.getSquare(),1);
+
+        possibleSquare_1.addAll(possibleSquare_2);
+
+        if (possibleSquare_1.contains(to)) {
             return true;
         }
 
         return false;
+    }
+
+    @Override
+    public String textValue() {
+        return "King";
+    }
+
+    @Override
+    public String toString() {
+        return textValue();
     }
 }

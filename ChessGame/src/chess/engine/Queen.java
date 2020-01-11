@@ -28,11 +28,9 @@ public class Queen extends Piece {
         Moveable diag = this.getArr()[0];
         Moveable horizontal_vertical = this.getArr()[1];
 
-        List<Square> possibleSquare_1 = new ArrayList<Square>();
-        List<Square> possibleSquare_2 = new ArrayList<Square>();
+        List<Square> possibleSquare_1 = horizontal_vertical.move(board, this.getSquare(),7);
+        List<Square> possibleSquare_2 = diag.move(board, this.getSquare(),7);
 
-        possibleSquare_1 = horizontal_vertical.move(board, this.getSquare());
-        possibleSquare_2 = diag.move(board, this.getSquare());
         possibleSquare_1.addAll(possibleSquare_2);
 
         if (possibleSquare_1.contains(to)) {
@@ -40,6 +38,16 @@ public class Queen extends Piece {
         }
 
         return false;
+    }
+
+    @Override
+    public String textValue() {
+        return "Queen";
+    }
+
+    @Override
+    public String toString() {
+        return textValue();
     }
 
 

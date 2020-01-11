@@ -8,14 +8,14 @@ import java.util.List;
 
 public class Horizontal_Vertical implements Moveable {
 
-    public List<Square> move(Board board, Square from) {
+    public List<Square> move(Board board, Square from, int maxDist) {
 
         System.out.println("Je suis dans horizontal");
 
         List<Square> squareList = new ArrayList<Square>();
 
         //vertical top
-        for (int i = from.getY() + 1; i <= 7; i++) {
+        for (int i = from.getY() + 1,j = 0; i <= 7 && j < maxDist; i++,j++) {
             //add the square to the list
             squareList.add(board.getBoard()[from.getX()][i]);
             //if the square has a piece we leave this way
@@ -25,7 +25,7 @@ public class Horizontal_Vertical implements Moveable {
         }
 
         //vertical down
-        for (int i = from.getY() - 1; i >= 0; i--) {
+        for (int i = from.getY() - 1, j = 0; i >= 0 && j < maxDist; i--,j++) {
             //add the square to the list
             squareList.add(board.getBoard()[from.getX()][i]);
             //if the square has a piece we leave this way
@@ -35,7 +35,7 @@ public class Horizontal_Vertical implements Moveable {
         }
 
         //horizontal left
-        for (int i = from.getX() - 1; i >= 0; i--) {
+        for (int i = from.getX() - 1,j = 0; i >= 0 && j < maxDist; i--,j++) {
             //add the square to the list
             squareList.add(board.getBoard()[i][from.getY()]);
             //if the square has a piece we leave this way
@@ -45,7 +45,7 @@ public class Horizontal_Vertical implements Moveable {
         }
 
         //horizontal right
-        for (int i = from.getX() + 1; i <= 7; i++) {
+        for (int i = from.getX() + 1, j = 0; i <= 7 && j < maxDist; i++,j++) {
             //add the square to the list
             squareList.add(board.getBoard()[i][from.getY()]);
             //if the square has a piece we leave this way

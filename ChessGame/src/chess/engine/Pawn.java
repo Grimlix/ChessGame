@@ -11,6 +11,8 @@ public class Pawn extends Piece {
         super(square,color, type);
     }
 
+
+
     public boolean isLegalMove(Board board, Square to) {
 
 
@@ -60,5 +62,13 @@ public class Pawn extends Piece {
 
     }
 
+    @Override
+    public String textValue() {
+        return "Pawn";
+    }
 
+    @Override
+    public String toString() {
+        return textValue();
+    }
 }

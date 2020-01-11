@@ -1,5 +1,6 @@
 package chess.engine;
 
+import chess.ChessView;
 import chess.PieceType;
 import chess.PlayerColor;
 import chess.engine.utils.Diagonal;
@@ -9,7 +10,7 @@ import chess.engine.utils.Moveable;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract class Piece {
+abstract class Piece implements ChessView.UserChoice {
 
     private Square square;
     private PieceType type;
@@ -63,6 +64,8 @@ abstract class Piece {
             return true;
         }
     }
+
+
 
 
 

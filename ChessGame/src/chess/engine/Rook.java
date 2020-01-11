@@ -16,9 +16,13 @@ public class Rook extends Piece {
         this.hasMoved = false;
     }
 
+
+
     public boolean getHasMoved() {
         return this.hasMoved;
     }
+
+
 
     public boolean isLegalMove(Board board, Square to) {
 
@@ -30,7 +34,7 @@ public class Rook extends Piece {
 
         Moveable horizontal_vertical = this.getArr()[1];
         List<Square> possibleSquare = new ArrayList<Square>();
-        possibleSquare = horizontal_vertical.move(board, this.getSquare());
+        possibleSquare = horizontal_vertical.move(board, this.getSquare(),7);
 
         if (possibleSquare.contains(to)) {
             return true;
@@ -39,5 +43,13 @@ public class Rook extends Piece {
         return false;
     }
 
+    @Override
+    public String textValue() {
+        return "Rook";
+    }
 
+    @Override
+    public String toString() {
+        return textValue();
+    }
 }

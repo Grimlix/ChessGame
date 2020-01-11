@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface Moveable {
 
-    List<Square> move(Board board, Square from);
+    List<Square> move(Board board, Square from, int maxDist);
 
 
 
