@@ -88,7 +88,7 @@ public class Board implements ChessController {
 
         //Checking if the piece allows the move, if true we change the player's turn and
         //the view. Otherwise returns false.
-        if (from.getPiece().isLegalMove(this, to) || isRock) {
+        if (from.getPiece().isLegalMove(this, to) || (isRock && from.getPiece() instanceof King)) {
 
             //Creating a move and adding it to the list
             Move move = new Move(from, to, from.getPiece());
