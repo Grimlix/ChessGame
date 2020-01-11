@@ -4,6 +4,7 @@ import chess.engine.Board;
 import chess.engine.Square;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Horizontal_Vertical implements Moveable {
 
@@ -13,42 +14,45 @@ public class Horizontal_Vertical implements Moveable {
         this.from = from;
     }
 
-    public ArrayList<Square> move(Board board, Square to) {
+    public List<Square> move(Board board, Square to) {
 
-        ArrayList<Square> squareList = new ArrayList<Square>();
+        List<Square> squareList = new ArrayList<Square>();
         int counter = 0;
 
-        if (from.getX() == to.getX()) {
-            int i = from.getX();
-            if (from.getY() > to.getY()) {
-                for (int j = from.getY() - 1; j > to.getY(); j--) {
-                    if (board.getBoard()[i][j].getPiece() == null) {
-                        squareList.set(counter++, board.getBoard()[i][j]);
+        if(from != null){
+            if (from.getX() == to.getX()) {
+                int i = from.getX();
+                if (from.getY() > to.getY()) {
+                    for (int j = from.getY() - 1; j > to.getY(); j--) {
+                        if (board.getBoard()[i][j].getPiece() == null) {
+                            squareList.set(counter++, board.getBoard()[i][j]);
+                        }
+                    }
+                } else {
+                    for (int j = from.getY() + 1; j < to.getY(); j++) {
+                        if (board.getBoard()[i][j].getPiece() == null) {
+                            squareList.set(counter++, board.getBoard()[i][j]);
+                        }
                     }
                 }
             } else {
-                for (int j = from.getY() + 1; j < to.getY(); j++) {
-                    if (board.getBoard()[i][j].getPiece() == null) {
-                        squareList.set(counter++, board.getBoard()[i][j]);
+                int j = from.getY();
+                if (from.getX() > to.getX()) {
+                    for (int i = from.getX() - 1; i > to.getX(); i--) {
+                        if (board.getBoard()[i][j].getPiece() == null) {
+                            squareList.set(counter++, board.getBoard()[i][j]);
+                        }
                     }
-                }
-            }
-        } else {
-            int j = from.getY();
-            if (from.getX() > to.getX()) {
-                for (int i = from.getX() - 1; i > to.getX(); i--) {
-                    if (board.getBoard()[i][j].getPiece() == null) {
-                        squareList.set(counter++, board.getBoard()[i][j]);
-                    }
-                }
-            } else {
-                for (int i = from.getX() + 1; i < to.getX(); i++) {
-                    if (board.getBoard()[i][j].getPiece() == null) {
-                        squareList.set(counter++, board.getBoard()[i][j]);
+                } else {
+                    for (int i = from.getX() + 1; i < to.getX(); i++) {
+                        if (board.getBoard()[i][j].getPiece() == null) {
+                            squareList.set(counter++, board.getBoard()[i][j]);
+                        }
                     }
                 }
             }
         }
+
         return squareList;
     }
 

@@ -22,6 +22,8 @@ abstract class Piece {
         this.square = square;
         this.type = type;
 
+        this.arr = new Moveable[2];
+
         Moveable diagonal = new Diagonal(this.square);
         Moveable horizontal_vertical = new Horizontal_Vertical(this.square);
 

@@ -16,9 +16,7 @@ public class Knight extends Piece {
     }*/
 
     public boolean isLegalMove(Board board, Square to){
-        System.out.println("In isLegalMove Knight");
         if(!super.isLegalMove(board,to)){
-            System.out.println("In super isLegalMove Rook");
             return false;
         }
 
