@@ -14,7 +14,7 @@ public class Square {
         this.y = y;
     }
 
-    public Piece getPiece(){
+    public Piece getPiece() {
         return piece;
     }
 
@@ -26,11 +26,11 @@ public class Square {
         return y;
     }
 
-    public void setPiece(Piece piece){
+    public void setPiece(Piece piece) {
         this.piece = piece;
     }
 
-    public void removePiece(){
+    public void removePiece() {
         piece = null;
     }
 }

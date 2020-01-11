@@ -7,18 +7,18 @@ import static java.lang.StrictMath.abs;
 
 public class Bishop extends Piece {
 
-    public Bishop(Square square, PlayerColor color,PieceType type){
-        super(square,color,type);
+    public Bishop(Square square, PlayerColor color, PieceType type) {
+        super(square, color, type);
     }
 
     public boolean isLegalMove(Board board, Square to) {
-        if(super.isLegalMove(board,to) && isToInDiagonalSquare(to) && isThereAPieceBetween(board,to)){
+        if (super.isLegalMove(board, to) && isToInDiagonalSquare(to) && isThereAPieceBetween(board, to)) {
             return true;
         }
         return false;
     }
 
-    private boolean isThereAPieceBetween(Board board,Square to) {
+    private boolean isThereAPieceBetween(Board board, Square to) {
         int fromX = getSquare().getX();
         int fromY = getSquare().getY();
         int toX = to.getX();
@@ -68,7 +68,7 @@ public class Bishop extends Piece {
     }
 
     //check if to is in Diagonal Square from Rook
-    private boolean isToInDiagonalSquare(Square to){
+    private boolean isToInDiagonalSquare(Square to) {
         int fromX = getSquare().getX();
         int fromY = getSquare().getY();
         int toX = to.getX();
@@ -77,12 +77,12 @@ public class Bishop extends Piece {
         int posXDiff = abs(fromX - toX);
 
         //Check if to is on same diagonal than Bishop
-        if(fromY > toY){
-            if(fromY - toY != posXDiff){
+        if (fromY > toY) {
+            if (fromY - toY != posXDiff) {
                 return false;
             }
-        }else{
-            if(toY - fromY != posXDiff){
+        } else {
+            if (toY - fromY != posXDiff) {
                 return false;
             }
         }
