@@ -19,10 +19,10 @@ public class Board implements ChessController {
 
     private boolean isRock = false;
 
-    private final int BOARD_HEIGHT = 8;
-    private final int BOARD_LENGTH = 8;
-    private final int BIG_CASTLING = 2;
-    private final int SMALL_CASTLING = -2;
+    private static final int BOARD_HEIGHT = 8;
+    private static final int BOARD_LENGTH = 8;
+    private static final int BIG_CASTLING = 2;
+    private static final int SMALL_CASTLING = -2;
 
     //Constructor
     public Board() {
@@ -38,6 +38,7 @@ public class Board implements ChessController {
 
     @Override
     public void newGame() {
+        //TODO : choix de qui commence ??
         playerTurn = PlayerColor.WHITE;
         initPieces();
     }
@@ -47,7 +48,24 @@ public class Board implements ChessController {
         this.view = view;
         view.startView();
 
+
+
+
+        ChessView.UserChoice test = new ChessView.UserChoice() {
+            @Override
+            public String textValue() {
+                return "ROOK";
+            }
+        };
+
+        System.out.println(test.textValue());
+
+        view.askUser("Salut!", "Lequel veux-tu promouvoir ?", test);
+
+
+
         while (true) {
+
         }
     }
 
@@ -59,7 +77,7 @@ public class Board implements ChessController {
 
         //if the source square is empty it won't work
         if (from.getPiece() == null) {
-            view.displayMessage("La case de départ est vide...");
+            this.view.displayMessage("La case de départ est vide...");
             return false;
         }
 
@@ -87,7 +105,7 @@ public class Board implements ChessController {
 
             //Creating a move and adding it to the list
             Move move = new Move(from, to, from.getPiece());
-            moves.add(move);
+            this.moves.add(move);
 
             //Making the move before checking if there is a check situation
             moveMaker(from, to);

@@ -31,6 +31,6 @@ public class Square {
     }
 
     public void removePiece() {
-        piece = null;
+        this.piece = null;
     }
 }

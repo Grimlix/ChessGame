@@ -10,7 +10,6 @@ public class King extends Piece {
     private static final int DISTANCE_MAX = 2;
     private boolean hasMoved;
 
-
     public King(Square square, PlayerColor color, PieceType type) {
         super(square, color, type);
         this.hasMoved = false;

@@ -10,6 +10,7 @@ public class Main {
         ChessController board = new Board();
         ChessView view = new GUIView(board);
         board.start(view);
+
     }
 
 }

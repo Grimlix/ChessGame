@@ -5,10 +5,11 @@ import chess.PlayerColor;
 
 public class Rook extends Piece {
 
-    private boolean hasMoved = false;
+    private boolean hasMoved;
 
     public Rook(Square square, PlayerColor color, PieceType type) {
         super(square, color, type);
+        this.hasMoved = false;
     }
 
     public boolean getHasMoved() {
