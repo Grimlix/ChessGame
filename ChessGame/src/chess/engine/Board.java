@@ -210,6 +210,17 @@ public class Board implements ChessController {
      }
 
 
+     private void moveMaker(Square from, Square to){
+
+         this.view.removePiece(from.getX(), from.getY());
+         this.view.putPiece(from.getPiece().getType(), from.getPiece().getColor(), to.getX(), to.getY());
+
+         //redo move
+         from.getPiece().move(to);
+         to.setPiece(from.getPiece());
+         from.removePiece();
+     }
+
 
      @Override
      public boolean move(int fromX, int fromY, int toX, int toY) {
@@ -263,39 +274,16 @@ public class Board implements ChessController {
                        int distance = from.getX() - to.getX();
                        switch(distance){
                            case 2 : //grand rock
-                               this.board[0][fromY].getPiece().move(this.board[3][fromY]);
-                               this.board[3][fromY].setPiece(this.board[0][fromY].getPiece());
-                               this.board[0][fromY].removePiece();
-
-                               this.view.removePiece(0, fromY);
-                               this.view.putPiece(this.board[0][fromY].getPiece().getType(), this.board[0][fromY].getPiece().getColor(), 3, fromY);
-
-                               // TODO move
-                                break;
+                               moveMaker(this.board[0][fromY],  this.board[3][fromY]);
+                               break;
 
                            case -2 : //petit rock
-                               this.board[7][fromY].getPiece().move(this.board[5][fromY]);
-                               this.board[5][fromY].setPiece(this.board[7][fromY].getPiece());
-                               this.board[7][fromY].removePiece();
-
-                               this.view.removePiece(7, fromY);
-                               this.view.putPiece(this.board[7][fromY].getPiece().getType(), this.board[7][fromY].getPiece().getColor(), 5, fromY);
-
-                               //TODO move
-
+                               moveMaker(this.board[7][fromY],  this.board[5][fromY]);
                                break;
                        }
                    }
 
-                   this.view.removePiece(fromX, fromY);
-                   this.view.putPiece(from.getPiece().getType(), from.getPiece().getColor(), toX, toY);
-
-                   //redo move
-                   from.getPiece().move(to);
-                   to.setPiece(from.getPiece());
-                   from.removePiece();
-
-
+                   moveMaker(from,  to);
 
 
                    //Changing the player's turn
