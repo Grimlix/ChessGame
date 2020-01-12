@@ -6,7 +6,6 @@ import chess.engine.Board.Board;
 import chess.engine.Board.Square;
 import chess.engine.utils.Moveable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Bishop extends Piece {

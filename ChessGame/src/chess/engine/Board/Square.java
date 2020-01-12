@@ -2,7 +2,7 @@ package chess.engine.Board;
 
 import chess.engine.Pieces.Piece;
 
-public class Square {
+public class Square{
 
     private Piece piece;
     private int x;
