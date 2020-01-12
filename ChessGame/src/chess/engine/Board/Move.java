@@ -2,16 +2,17 @@ package chess.engine.Board;
 
 import chess.engine.Pieces.Piece;
 
-public class Move {
+class Move {
 
     private Square from;
     private Square to;
-    private Piece piece;
-
-    Move(Square from, Square to, Piece piece){
+    private Piece attacker;
+    private Piece defender;
+    Move(Square from, Square to, Piece attacker, Piece defender){
         this.from = from;
         this.to = to;
-        this.piece = piece;
+        this.attacker = attacker;
+        this.defender = defender;
     }
 
     protected Square getFrom() {
@@ -22,4 +23,11 @@ public class Move {
         return to;
     }
 
+    public Piece getAttacker() {
+        return attacker;
+    }
+
+    public Piece getDefender(){
+        return defender;
+    }
 }

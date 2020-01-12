@@ -28,4 +28,5 @@ public interface ChessController {
    */
   void newGame();
 
+  void undo();
 }

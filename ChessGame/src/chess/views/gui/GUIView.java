@@ -181,12 +181,26 @@ public class GUIView extends BaseView<ImageIcon> {
       }
     };
     tools.add(newGameAction);
+
+    //Undo button
     tools.addSeparator();
+    Action undoAction = new AbstractAction("Undo") {
+      @Override
+      public void actionPerformed(ActionEvent actionEvent) {
+        controller.undo();
+        messageLabel.setText("");
+      }
+    };
+    tools.add(undoAction);
+    tools.addSeparator();
+
+
     tools.add(headerLabel);
     tools.addSeparator();
     tools.addSeparator();
     tools.add(messageLabel);
     messageLabel.setForeground(Color.RED);
+
 
     JPanel chessBoard;
     chessBoard = new JPanel(new GridLayout(0, 9)) {
