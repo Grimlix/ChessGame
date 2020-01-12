@@ -8,6 +8,4 @@ public interface Moveable {
 
     List<Square> move(Board board, Square from, int maxDist);
 
-
-
 }

@@ -37,7 +37,6 @@ public class Rook extends Piece {
             this.hasMoved = true;
             return true;
         }
-
         return false;
     }
 

@@ -8,8 +8,6 @@ import chess.engine.utils.Moveable;
 
 import java.util.List;
 
-import static java.lang.StrictMath.abs;
-
 public class Queen extends Piece {
 
     public Queen(Square square, PlayerColor color, PieceType type) {

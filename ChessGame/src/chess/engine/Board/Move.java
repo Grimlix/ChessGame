@@ -14,15 +14,12 @@ public class Move {
         this.piece = piece;
     }
 
-    Square getFrom() {
+    protected Square getFrom() {
         return from;
     }
 
-    Square getTo() {
+    protected Square getTo() {
         return to;
     }
 
-    Piece getPiece() {
-        return piece;
-    }
 }

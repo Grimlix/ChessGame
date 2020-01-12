@@ -33,13 +33,16 @@ public class Board implements ChessController {
         return BIG_CASTLE;
     }
 
-    //Getter
     public Square[][] getBoard() {
         return board;
     }
 
-    public int getSMALL_CASTLE(){
+    public int getSMALL_CASTLE() {
         return SMALL_CASTLE;
+    }
+
+    public List<Move> getMoves() {
+        return moves;
     }
 
     @Override
@@ -52,8 +55,6 @@ public class Board implements ChessController {
     public void start(ChessView view) {
         this.view = view;
         view.startView();
-
-
     }
 
     @Override
@@ -91,43 +92,28 @@ public class Board implements ChessController {
             upgradeBoard(from, to);
 
             if (!isCheck(playerTurn)) {
-
                 //undo last move so it can be added to the view
                 upgradeBoard(move.getTo(), move.getFrom());
 
-
                 if (isRock) {
-                   if(!moveRook(from, to)){
-                       view.displayMessage("Move Impossible : Une des cases du chemin vous met en echec!");
-                       return false;
-                   }
+                    if (!moveRook(from, to)) {
+                        view.displayMessage("Move Impossible : une des cases du chemin vous met en echec!");
+                        return false;
+                    }
                 }
 
+                checkEnPassant(from, to);
                 //Display the new move and change the squares on the board
                 upgradeView(from, to);
                 upgradeBoard(from, to);
 
-                if (!moves.isEmpty() && isInPromotionState(moves.get(moves.size() - 1))) {
-                    Piece promotePiece = null;
-
-                    promotePiece = view.askUser("Salut!", "En quelle piece promouvoir ?",
-                            (Piece) new Bishop(to, to.getPiece().getColor(), PieceType.BISHOP),
-                            (Piece) new Knight(to, to.getPiece().getColor(), PieceType.KNIGHT),
-                            (Piece) new Queen(to, to.getPiece().getColor(), PieceType.QUEEN),
-                            (Piece) new Rook(to, to.getPiece().getColor(), PieceType.ROOK));
-                    to.getPiece().getSquare().removePiece();
-                    to.setPiece(promotePiece);
-                    upgradeView(to, to);
-                }
-
+                checkPromotionState(to);
                 changePlayerTurn();
 
                 //Check if the move made a check situation
                 if (isCheck(playerTurn)) {
                     this.view.displayMessage("Echec !");
                 }
-
-
                 return true;
             } else {
                 //Undo last move
@@ -136,13 +122,73 @@ public class Board implements ChessController {
                 this.view.displayMessage("Move Impossible : mise en echec.");
                 return false;
             }
-
         } else {
-            this.view.displayMessage("Move Impossible : Interdit.");
+            this.view.displayMessage("Move Impossible : interdit.");
             return false;
         }
+    }
 
+    /**
+     * Check if there is a en passant state and if there is, removes teh pawn that got killed
+     *
+     * @param from
+     * @param to
+     */
+    private void checkEnPassant(Square from, Square to) {
+        //If there is a "prise en passant" we have to delete the pawn
+        //n = 2 because we check if the last move of the sidePiece was done just before this move, and we add
+        //2 moves in between.
+        if (from.getPiece().getType() == PieceType.PAWN) {
+            if (from.getX() == 0) {
+                Piece rightPiece = board[from.getX() + 1][from.getY()].getPiece();
+                if (((Pawn) from.getPiece()).isEnPassant(rightPiece, to, this, 2)) {
+                    //Display the new move and change the squares on the board
+                    this.view.removePiece(rightPiece.getSquare().getX(), rightPiece.getSquare().getY());
+                    rightPiece.getSquare().removePiece();
+                }
+            } else if (from.getX() == 7) {
+                Piece leftPiece = board[from.getX() - 1][from.getY()].getPiece();
+                if (((Pawn) from.getPiece()).isEnPassant(leftPiece, to, this, 2)) {
+                    //Display the new move and change the squares on the board
+                    this.view.removePiece(leftPiece.getSquare().getX(), leftPiece.getSquare().getY());
+                    leftPiece.getSquare().removePiece();
+                }
+            } else {
+                Piece leftPiece = board[from.getX() - 1][from.getY()].getPiece();
+                Piece rightPiece = board[from.getX() + 1][from.getY()].getPiece();
+                if (((Pawn) from.getPiece()).isEnPassant(leftPiece, to, this, 2)) {
+                    //Display the new move and change the squares on the board
+                    this.view.removePiece(leftPiece.getSquare().getX(), leftPiece.getSquare().getY());
+                    leftPiece.getSquare().removePiece();
+                } else if (((Pawn) from.getPiece()).isEnPassant(rightPiece, to, this, 2)) {
+                    //Display the new move and change the squares on the board
+                    this.view.removePiece(rightPiece.getSquare().getX(), rightPiece.getSquare().getY());
+                    rightPiece.getSquare().removePiece();
+                }
 
+            }
+        }
+
+    }
+
+    /**
+     * Check if there is a promotion state and if there is, ask the user and switch the new Piece.
+     *
+     * @param to
+     */
+    private void checkPromotionState(Square to) {
+        if (!moves.isEmpty() && isInPromotionState(moves.get(moves.size() - 1))) {
+            Piece promotePiece = null;
+
+            promotePiece = view.askUser("Salut!", "En quelle piece promouvoir ?",
+                    (Piece) new Bishop(to, to.getPiece().getColor(), PieceType.BISHOP),
+                    (Piece) new Knight(to, to.getPiece().getColor(), PieceType.KNIGHT),
+                    (Piece) new Queen(to, to.getPiece().getColor(), PieceType.QUEEN),
+                    (Piece) new Rook(to, to.getPiece().getColor(), PieceType.ROOK));
+            to.getPiece().getSquare().removePiece();
+            to.setPiece(promotePiece);
+            upgradeView(to, to);
+        }
     }
 
     /**
@@ -290,7 +336,7 @@ public class Board implements ChessController {
                     //Display the rook move and change the squares on the board
                     upgradeView(this.board[0][from.getY()], this.board[3][from.getY()]);
                     upgradeBoard(this.board[0][from.getY()], this.board[3][from.getY()]);
-                }else{
+                } else {
                     //undo
                     upgradeBoard(moveKingLeft.getTo(), moveKingLeft.getFrom());
                     moves.remove(moveKingLeft);
@@ -312,7 +358,7 @@ public class Board implements ChessController {
                     //Display the rook move and change the squares on the board
                     upgradeView(this.board[7][from.getY()], this.board[5][from.getY()]);
                     upgradeBoard(this.board[7][from.getY()], this.board[5][from.getY()]);
-                }else{
+                } else {
                     //undo
                     upgradeBoard(moveKingRight.getTo(), moveKingRight.getFrom());
                     moves.remove(moveKingRight);
@@ -336,6 +382,9 @@ public class Board implements ChessController {
                 board[i][j] = null;
             }
         }
+
+        //clear the list move
+        moves.clear();
 
         //CREATING ALL THE PIECES
         Piece kingW = new King(null, PlayerColor.WHITE, PieceType.KING);

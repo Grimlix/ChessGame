@@ -14,7 +14,6 @@ public abstract class Piece implements ChessView.UserChoice {
     private Square square;
     private PieceType type;
     private PlayerColor color;
-
     private Moveable arr[];
 
     public Piece(Square square, PlayerColor color, PieceType type) {
@@ -56,12 +55,9 @@ public abstract class Piece implements ChessView.UserChoice {
         if (to.getPiece() != null) {
             if (to.getPiece().getColor() == this.color) {
                 return false;
-            } else {
-                return true;
             }
-        } else {
-            return true;
         }
+        return true;
     }
 }
 

@@ -15,8 +15,6 @@ public class Bishop extends Piece {
         super(square, color, type);
     }
 
-
-
     public boolean isLegalMove(Board board, Square to) {
 
         if (!super.isLegalMove(board, to)) {
@@ -24,7 +22,7 @@ public class Bishop extends Piece {
         }
 
         Moveable diag = this.getArr()[0];
-        List<Square> possibleSquare = new ArrayList<Square>();
+        List<Square> possibleSquare;
         possibleSquare = diag.move(board, this.getSquare(),7);
 
         if (possibleSquare.contains(to)) {

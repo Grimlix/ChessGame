@@ -26,11 +26,11 @@ public class Square {
         return y;
     }
 
-    void setPiece(Piece piece) {
+    protected void setPiece(Piece piece) {
         this.piece = piece;
     }
 
-    void removePiece() {
+    protected void removePiece() {
         this.piece = null;
     }
 }
