@@ -128,7 +128,7 @@ public class Board implements ChessController {
                     }
                 }
 
-                checkEnPassant(from, to);
+                checkEnPassant(move);
                 //Display the new move and change the squares on the board
                 upgradeView(from, to);
                 upgradeBoard(from, to);
@@ -159,51 +159,50 @@ public class Board implements ChessController {
     /**
      * Check if there is a en passant state and if there is, removes teh pawn that got killed
      *
-     * @param from
-     * @param to
+     * @param move
+     * @param
      */
-    private void checkEnPassant(Square from, Square to) {
+    private void checkEnPassant(Move move) {
         //If there is a "prise en passant" we have to delete the pawn
         //n = 2 because we check if the last move of the sidePiece was done just before this move, and we add
         //2 moves in between.
+        Piece rightPiece = null;
+        Piece leftPiece = null;
 
-        int x = from.getX();
-        int y = from.getY();
-        Square rightSquare = board[x + 1][y];
-        Square leftSquare =  board[x - 1][y];
-        Piece rightPiece = rightSquare.getPiece();
-        Piece leftPiece = leftSquare.getPiece();
+        //set side square
+        if(move.getFrom().getX() == 0){
+            rightPiece = board[move.getFrom().getX() + 1][move.getFrom().getY()].getPiece();
+        }else if(move.getFrom().getX() == 7){
+            leftPiece = board[move.getFrom().getX() - 1][move.getFrom().getY()].getPiece();
+        }else{
+            rightPiece = board[move.getFrom().getX() + 1][move.getFrom().getY()].getPiece();
+            leftPiece = board[move.getFrom().getX() - 1][move.getFrom().getY()].getPiece();
+        }
 
-
-        //if it is a pawn
-        if (from.getPiece().getType() == PieceType.PAWN) {
-            if (x == 0) {
-                if (((Pawn) from.getPiece()).isEnPassant(rightPiece, to, this, 2)) {
-                    //Display the new move and change the squares on the board
-                    this.view.removePiece(rightSquare.getX(), rightSquare.getY());
-                    rightSquare.removePiece();
-                }
-            } else if (x == 7) {
-                if (((Pawn) from.getPiece()).isEnPassant(leftPiece, to, this, 2)) {
-                    //Display the new move and change the squares on the board
-                    this.view.removePiece(leftSquare.getX(), leftSquare.getY());
-                    leftSquare.removePiece();
-                }
+        //delete pawn if needed
+        if (move.getFrom().getPiece().getType() == PieceType.PAWN) {
+            if (move.getFrom().getX() == 0) {
+                removePieceEnPassant(move,rightPiece);
+            } else if (move.getFrom().getX() == 7) {
+                removePieceEnPassant(move,leftPiece);
             } else {
-                if (((Pawn) from.getPiece()).isEnPassant(leftPiece, to, this, 2)) {
-                    //Display the new move and change the squares on the board
-                    this.view.removePiece(leftSquare.getX(), leftSquare.getY());
-                    leftSquare.removePiece();
-                } else if (((Pawn) from.getPiece()).isEnPassant(rightPiece, to, this, 2)) {
-                    //Display the new move and change the squares on the board
-                    this.view.removePiece(rightSquare.getX(), rightSquare.getY());
-                    rightSquare.removePiece();
-                }
+                removePieceEnPassant(move,leftPiece);
+                removePieceEnPassant(move,rightPiece);
 
             }
         }
 
     }
+
+    private void removePieceEnPassant(Move move, Piece piece){
+        if(piece != null && ((Pawn) move.getFrom().getPiece()).isEnPassant(piece,move.getTo(),this,2)){
+            this.view.removePiece(piece.getSquare().getX(), piece.getSquare().getY());
+            piece.getSquare().removePiece();
+        }
+
+    }
+
+
 
     /**
      * Check if there is a promotion state and if there is, ask the user and switch the new Piece.
@@ -248,8 +247,7 @@ public class Board implements ChessController {
         Square king = getKingPos(color);
         for (Square[] x : board) {
             for (Square y : x) {
-                Piece piece = y.getPiece();
-                if (piece != null && piece.getColor() != color && piece.isLegalMove(this, king)) {
+                if (y.getPiece() != null && y.getPiece().getColor() != color && y.getPiece().isLegalMove(this, king)) {
                     return true;
                 }
             }
