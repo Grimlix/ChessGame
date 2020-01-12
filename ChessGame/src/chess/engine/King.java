@@ -17,14 +17,16 @@ public class King extends Piece {
 
     private boolean checkRook(Board board, int x, int i_start, int i_end) {
         if (!this.hasMoved) {
-            if (!((Rook) board.getBoard()[x][getSquare().getY()].getPiece()).getHasMoved()) {
-                //check if square are empty
-                for (int i = i_start; i < i_end; i++) {
-                    if (board.getBoard()[i][getSquare().getY()].getPiece() != null) {
-                        return false;
+            if (board.getBoard()[x][getSquare().getY()].getPiece() instanceof Rook) {//check if tower is at it place
+                if (!((Rook) board.getBoard()[x][getSquare().getY()].getPiece()).getHasMoved()) {
+                    //check if square are empty
+                    for (int i = i_start; i < i_end; i++) {
+                        if (board.getBoard()[i][getSquare().getY()].getPiece() != null) {
+                            return false;
+                        }
                     }
+                    return true;
                 }
-                return true;
             }
         }
         return false;
