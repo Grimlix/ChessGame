@@ -1,4 +1,4 @@
-package chess.engine;
+package chess.engine.askUser;
 
 import chess.ChessView;
 import chess.PieceType;

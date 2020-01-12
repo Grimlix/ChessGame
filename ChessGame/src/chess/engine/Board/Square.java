@@ -1,6 +1,6 @@
-package chess.engine;
+package chess.engine.Board;
 
-import chess.ChessView;
+import chess.engine.Pieces.Piece;
 
 public class Square {
 
@@ -26,11 +26,11 @@ public class Square {
         return y;
     }
 
-    public void setPiece(Piece piece) {
+    void setPiece(Piece piece) {
         this.piece = piece;
     }
 
-    public void removePiece() {
+    void removePiece() {
         this.piece = null;
     }
 }

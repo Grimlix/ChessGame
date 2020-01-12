@@ -1,12 +1,12 @@
-package chess.engine;
+package chess.engine.Pieces;
 
 import chess.PieceType;
 import chess.PlayerColor;
+import chess.engine.Board.Board;
+import chess.engine.Board.Square;
 import chess.engine.utils.Moveable;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static java.lang.StrictMath.abs;
 

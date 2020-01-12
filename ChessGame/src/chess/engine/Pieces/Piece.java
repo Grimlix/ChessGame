@@ -1,13 +1,15 @@
-package chess.engine;
+package chess.engine.Pieces;
 
 import chess.ChessView;
 import chess.PieceType;
 import chess.PlayerColor;
+import chess.engine.Board.Board;
+import chess.engine.Board.Square;
 import chess.engine.utils.Diagonal;
 import chess.engine.utils.Horizontal_Vertical;
 import chess.engine.utils.Moveable;
 
-abstract class Piece implements ChessView.UserChoice {
+public abstract class Piece implements ChessView.UserChoice {
 
     private Square square;
     private PieceType type;

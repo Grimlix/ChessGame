@@ -1,7 +1,9 @@
-package chess.engine;
+package chess.engine.Pieces;
 
 import chess.PieceType;
 import chess.PlayerColor;
+import chess.engine.Board.Board;
+import chess.engine.Board.Square;
 
 import static java.lang.StrictMath.abs;
 

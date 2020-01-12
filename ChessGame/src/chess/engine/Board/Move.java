@@ -1,4 +1,6 @@
-package chess.engine;
+package chess.engine.Board;
+
+import chess.engine.Pieces.Piece;
 
 public class Move {
 
@@ -6,21 +8,21 @@ public class Move {
     private Square to;
     private Piece piece;
 
-    public Move(Square from, Square to, Piece piece){
+    Move(Square from, Square to, Piece piece){
         this.from = from;
         this.to = to;
         this.piece = piece;
     }
 
-    public Square getFrom() {
+    Square getFrom() {
         return from;
     }
 
-    public Square getTo() {
+    Square getTo() {
         return to;
     }
 
-    public Piece getPiece() {
+    Piece getPiece() {
         return piece;
     }
 }

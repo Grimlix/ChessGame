@@ -1,14 +1,13 @@
-package chess.engine;
+package chess.engine.Board;
 
 import chess.ChessController;
 import chess.ChessView;
 import chess.PieceType;
 import chess.PlayerColor;
+import chess.engine.Pieces.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.StrictMath.abs;
 
 public class Board implements ChessController {
 
@@ -53,6 +52,8 @@ public class Board implements ChessController {
     public void start(ChessView view) {
         this.view = view;
         view.startView();
+
+
     }
 
     @Override
@@ -87,12 +88,12 @@ public class Board implements ChessController {
             this.moves.add(move);
 
             //Making the move before checking if there is a check situation
-            moveMaker(from, to);
+            upgradeBoard(from, to);
 
             if (!isCheck(playerTurn)) {
 
                 //undo last move so it can be added to the view
-                moveMaker(move.getTo(), move.getFrom());
+                upgradeBoard(move.getTo(), move.getFrom());
 
 
                 if (isRock) {
@@ -103,8 +104,8 @@ public class Board implements ChessController {
                 }
 
                 //Display the new move and change the squares on the board
-                moveDisplay(from, to);
-                moveMaker(from, to);
+                upgradeView(from, to);
+                upgradeBoard(from, to);
 
                 if (!moves.isEmpty() && isInPromotionState(moves.get(moves.size() - 1))) {
                     Piece promotePiece = null;
@@ -116,7 +117,7 @@ public class Board implements ChessController {
                             (Piece) new Rook(to, to.getPiece().getColor(), PieceType.ROOK));
                     to.getPiece().getSquare().removePiece();
                     to.setPiece(promotePiece);
-                    moveDisplay(to, to);
+                    upgradeView(to, to);
                 }
 
                 changePlayerTurn();
@@ -130,7 +131,7 @@ public class Board implements ChessController {
                 return true;
             } else {
                 //Undo last move
-                moveMaker(move.getTo(), move.getFrom());
+                upgradeBoard(move.getTo(), move.getFrom());
                 moves.remove(move);
                 this.view.displayMessage("Move Impossible : mise en echec.");
                 return false;
@@ -184,7 +185,7 @@ public class Board implements ChessController {
      * @param from
      * @param to
      */
-    private void moveMaker(Square from, Square to) {
+    private void upgradeBoard(Square from, Square to) {
         from.getPiece().move(to);
         to.setPiece(from.getPiece());
         from.removePiece();
@@ -196,7 +197,7 @@ public class Board implements ChessController {
      * @param from
      * @to
      */
-    private void moveDisplay(Square from, Square to) {
+    private void upgradeView(Square from, Square to) {
         this.view.removePiece(from.getX(), from.getY());
         this.view.putPiece(from.getPiece().getType(), from.getPiece().getColor(), to.getX(), to.getY());
     }
@@ -280,18 +281,18 @@ public class Board implements ChessController {
             case BIG_CASTLE:
                 Move moveKingLeft = new Move(from, this.board[from.getX() - 1][from.getY()], from.getPiece());
                 this.moves.add(moveKingLeft);
-                moveMaker(from, this.board[from.getX() - 1][from.getY()]);
+                upgradeBoard(from, this.board[from.getX() - 1][from.getY()]);
                 if (!isCheck(playerTurn)) {
                     //undo
-                    moveMaker(moveKingLeft.getTo(), moveKingLeft.getFrom());
+                    upgradeBoard(moveKingLeft.getTo(), moveKingLeft.getFrom());
                     moves.remove(moveKingLeft);
 
                     //Display the rook move and change the squares on the board
-                    moveDisplay(this.board[0][from.getY()], this.board[3][from.getY()]);
-                    moveMaker(this.board[0][from.getY()], this.board[3][from.getY()]);
+                    upgradeView(this.board[0][from.getY()], this.board[3][from.getY()]);
+                    upgradeBoard(this.board[0][from.getY()], this.board[3][from.getY()]);
                 }else{
                     //undo
-                    moveMaker(moveKingLeft.getTo(), moveKingLeft.getFrom());
+                    upgradeBoard(moveKingLeft.getTo(), moveKingLeft.getFrom());
                     moves.remove(moveKingLeft);
                     return false;
                 }
@@ -301,19 +302,19 @@ public class Board implements ChessController {
                 Move moveKingRight = new Move(from, this.board[from.getX() + 1][from.getY()], from.getPiece());
                 this.moves.add(moveKingRight);
 
-                moveMaker(from, this.board[from.getX() + 1][from.getY()]);
+                upgradeBoard(from, this.board[from.getX() + 1][from.getY()]);
                 if (!isCheck(playerTurn)) {
                     //undo
-                    moveMaker(moveKingRight.getTo(), moveKingRight.getFrom());
+                    upgradeBoard(moveKingRight.getTo(), moveKingRight.getFrom());
                     moves.remove(moveKingRight);
 
 
                     //Display the rook move and change the squares on the board
-                    moveDisplay(this.board[7][from.getY()], this.board[5][from.getY()]);
-                    moveMaker(this.board[7][from.getY()], this.board[5][from.getY()]);
+                    upgradeView(this.board[7][from.getY()], this.board[5][from.getY()]);
+                    upgradeBoard(this.board[7][from.getY()], this.board[5][from.getY()]);
                 }else{
                     //undo
-                    moveMaker(moveKingRight.getTo(), moveKingRight.getFrom());
+                    upgradeBoard(moveKingRight.getTo(), moveKingRight.getFrom());
                     moves.remove(moveKingRight);
                     return false;
                 }

@@ -1,19 +1,18 @@
-package chess.engine;
+package chess.engine.askUser;
 
 import chess.ChessView;
 import chess.PieceType;
 
-public class askUserKnight implements ChessView.UserChoice {
-    private static final PieceType type = PieceType.KNIGHT;
+public class askUserQueen implements ChessView.UserChoice {
 
+    private static final PieceType type = PieceType.QUEEN;
     @Override
     public String toString() {
         return textValue();
     }
 
-    @Override
     public String textValue() {
-        return "Knight";
+        return "Queen";
     }
 
     public static PieceType getType() {

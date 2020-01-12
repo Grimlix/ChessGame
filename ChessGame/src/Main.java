@@ -1,6 +1,6 @@
 import chess.ChessController;
 import chess.ChessView;
-import chess.engine.*;
+import chess.engine.Board.Board;
 import chess.views.gui.GUIView;
 
 public class Main {
@@ -9,6 +9,7 @@ public class Main {
 
         ChessController board = new Board();
         ChessView view = new GUIView(board);
+        //ChessView view = new ConsoleView(board);
         board.start(view);
 
     }

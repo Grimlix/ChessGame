@@ -115,8 +115,6 @@ public class ConsoleView extends BaseView<String> {
     }
   }
 
-
-
   private void printBoard() {
     for (int y = 7; y >= 0; --y) {
       System.out.print(y + 1 + " |");
@@ -143,7 +141,6 @@ public class ConsoleView extends BaseView<String> {
       scanner.nextLine();//clean buffer
     }
     return in;
-
   }
 
   private static int intCoordinateToIndex(char c) {
@@ -161,7 +158,6 @@ public class ConsoleView extends BaseView<String> {
 
       if (!ok) {
         System.out.println("Invalid move");
-        printBoard();
       }
     }
   }

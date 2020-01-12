@@ -1,9 +1,9 @@
-package chess.engine;
+package chess.engine.Pieces;
 
 import chess.PieceType;
 import chess.PlayerColor;
-
-import static java.lang.StrictMath.abs;
+import chess.engine.Board.Board;
+import chess.engine.Board.Square;
 
 public class Pawn extends Piece {
 
@@ -39,7 +39,7 @@ public class Pawn extends Piece {
         }
 
         //Y distance is less than maxDistance
-        if (abs(to.getY() - getSquare().getY()) > maxDistance) {
+        if (StrictMath.abs(to.getY() - getSquare().getY()) > maxDistance) {
             return false;
         } else {
             //if move vertically
@@ -48,7 +48,7 @@ public class Pawn extends Piece {
                     return false;
                 }
             } else {//if eat
-                if ((abs(to.getY() - getSquare().getY()) > 1) || (abs(to.getX() - getSquare().getX()) > 1) || to.getPiece() == null) {
+                if ((StrictMath.abs(to.getY() - getSquare().getY()) > 1) || (StrictMath.abs(to.getX() - getSquare().getX()) > 1) || to.getPiece() == null) {
                     return false;
                 }
             }

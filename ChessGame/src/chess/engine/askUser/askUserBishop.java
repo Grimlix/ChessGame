@@ -1,10 +1,10 @@
-package chess.engine;
+package chess.engine.askUser;
 
 import chess.ChessView;
 import chess.PieceType;
 
-public class askUserRook implements ChessView.UserChoice {
-    private static final PieceType type = PieceType.ROOK;
+public class askUserBishop implements ChessView.UserChoice {
+    private static final PieceType type = PieceType.BISHOP;
 
     @Override
     public String toString() {
@@ -12,7 +12,7 @@ public class askUserRook implements ChessView.UserChoice {
     }
 
     public String textValue() {
-        return "Rook";
+        return "Bishop";
     }
 
     public static PieceType getType() {
