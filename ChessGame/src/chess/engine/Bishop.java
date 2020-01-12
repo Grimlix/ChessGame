@@ -23,8 +23,6 @@ public class Bishop extends Piece {
             return false;
         }
 
-        System.out.println("JE suis dans le fou");
-
         Moveable diag = this.getArr()[0];
         List<Square> possibleSquare = new ArrayList<Square>();
         possibleSquare = diag.move(board, this.getSquare(),7);

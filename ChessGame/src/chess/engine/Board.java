@@ -82,13 +82,13 @@ public class Board implements ChessController {
         }
 
         //Checking if there is a rock situation
-        if (from.getPiece() instanceof King && ((King) from.getPiece()).isLegalRock(this, to)) {
+        if (from.getPiece().getType() == PieceType.KING && ((King) from.getPiece()).isLegalRock(this, to)) {
             isRock = true;
         }
 
         //Checking if the piece allows the move, if true we change the player's turn and
         //the view. Otherwise returns false.
-        if (from.getPiece().isLegalMove(this, to) || (isRock && from.getPiece() instanceof King)) {
+        if (from.getPiece().isLegalMove(this, to) || (isRock && from.getPiece().getType() == PieceType.KING)) {
 
             //Creating a move and adding it to the list
             Move move = new Move(from, to, from.getPiece());
