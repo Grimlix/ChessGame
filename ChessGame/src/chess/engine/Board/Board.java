@@ -94,7 +94,7 @@ public class Board implements ChessController {
             return false;
         }
         //if wrong player is playing it won't work
-        if (!checkPlayerTurn(from)) {
+        if (!checkPlayerTurn(from.getPiece().getColor())) {
             return false;
         }
 
@@ -159,8 +159,8 @@ public class Board implements ChessController {
     /**
      * Check if there is a en passant state and if there is, removes teh pawn that got killed
      *
-     * @param from
-     * @param to
+     * @param from Attaquer Square
+     * @param to Target Square
      */
     private void checkEnPassant(Square from, Square to) {
         //If there is a "prise en passant" we have to delete the pawn
@@ -198,8 +198,9 @@ public class Board implements ChessController {
      *  Remove Piece eaten by En Passant
      *
      * @param from Attacker Square
-     * @param to Defender Square
+     * @param to Target Square
      * @param piece Piece on Attacker Square
+     *
      */
     private void removePieceEnPassant(Square from, Square to, Piece piece){
         if(piece != null && ((Pawn) from.getPiece()).isEnPassant(piece,to,this,2)){
@@ -214,25 +215,25 @@ public class Board implements ChessController {
     /**
      * Check if there is a promotion state and if there is, ask the user and switch the new Piece.
      *
-     * @param to
+     *
      */
-    private void checkPromotionState(Square to) {
+    private void checkPromotionState(Square promotionSquare) {
         if (!moves.isEmpty() && isInPromotionState(moves.get(moves.size() - 1))) {
             Piece promotePiece = view.askUser("Salut!", "En quelle piece promouvoir ?",
-                     new Bishop(to, to.getPiece().getColor(), PieceType.BISHOP),
-                     new Knight(to, to.getPiece().getColor(), PieceType.KNIGHT),
-                     new Queen(to, to.getPiece().getColor(), PieceType.QUEEN),
-                     new Rook(to, to.getPiece().getColor(), PieceType.ROOK));
-            to.getPiece().getSquare().removePiece();
-            to.setPiece(promotePiece);
-            upgradeView(to, to);
+                     new Bishop(promotionSquare, promotionSquare.getPiece().getColor(), PieceType.BISHOP),
+                     new Knight(promotionSquare, promotionSquare.getPiece().getColor(), PieceType.KNIGHT),
+                     new Queen(promotionSquare, promotionSquare.getPiece().getColor(), PieceType.QUEEN),
+                     new Rook(promotionSquare, promotionSquare.getPiece().getColor(), PieceType.ROOK));
+            promotionSquare.getPiece().getSquare().removePiece();
+            promotionSquare.setPiece(promotePiece);
+            upgradeView(promotionSquare, promotionSquare);
         }
     }
 
     /**
      * Finds the king position, used to check if he's being checked
      *
-     * @param color
+     * @param color color of king to find
      */
     private Square getKingPos(PlayerColor color) {
         for (Square[] x : board) {
@@ -248,7 +249,7 @@ public class Board implements ChessController {
     /**
      * Returns true if the king of one player (color) is in a check situation
      *
-     * @param color
+     * @param color color of king
      */
     private boolean isCheck(PlayerColor color) {
         Square king = getKingPos(color);
@@ -264,9 +265,6 @@ public class Board implements ChessController {
 
     /**
      * Switch the piece from 2 squares on the board.
-     *
-     * @param from
-     * @param to
      */
     private void upgradeBoard(Square from, Square to) {
         from.getPiece().move(to);
@@ -276,9 +274,6 @@ public class Board implements ChessController {
 
     /**
      * Switch the piece from 2 square on the view.
-     *
-     * @param from
-     * @to
      */
     private void upgradeView(Square from, Square to) {
         this.view.removePiece(from.getX(), from.getY());
@@ -288,17 +283,17 @@ public class Board implements ChessController {
     /**
      * Checks which player's turn it is
      *
-     * @param from
+     * @param color of player that made move
      */
-    private boolean checkPlayerTurn(Square from) {
+    private boolean checkPlayerTurn(PlayerColor color) {
         //Playing turn after turn, nobody can play more than once
         if (playerTurn == PlayerColor.WHITE) {
-            if (from.getPiece().getColor() == PlayerColor.BLACK) {
+            if (color == PlayerColor.BLACK) {
                 view.displayMessage("C'est aux blancs de jouer !");
                 return false;
             }
         } else {
-            if (from.getPiece().getColor() == PlayerColor.WHITE) {
+            if (color == PlayerColor.WHITE) {
                 view.displayMessage("C'est aux noirs de jouer !");
                 return false;
             }
@@ -321,7 +316,7 @@ public class Board implements ChessController {
     /**
      * Check if the player tries to move an empty square
      *
-     * @param from
+     * @param from Square from which player tries to do a move
      */
     private boolean moveFromEmptySquare(Square from) {
         if (from.getPiece() == null) {
@@ -335,7 +330,7 @@ public class Board implements ChessController {
      * Check last move if it's a pawn on the last square in front of him
      * which would lead to a promotion state
      *
-     * @param lastMove
+     * @param lastMove last move made
      */
     private boolean isInPromotionState(Move lastMove) {
         Piece piece = lastMove.getTo().getPiece();
@@ -343,8 +338,8 @@ public class Board implements ChessController {
         if (piece.getType() == PieceType.PAWN) {
             if (y == 0 && piece.getColor() == PlayerColor.BLACK) {
                 return true;
-            } else if (y == 7 && piece.getColor() == PlayerColor.WHITE) {
-                return true;
+            } else{
+                return y == 7 && piece.getColor() == PlayerColor.WHITE;
             }
         }
         return false;
@@ -353,10 +348,10 @@ public class Board implements ChessController {
 
     /**
      * Check if the path between the king and the rook makes a check situation, if it is return false
-     * else it changes the rook sqaure on the board and on the view.
+     * else it changes the rook square on the board and on the view.
      *
-     * @param from
-     * @param to
+     * @param from King Square
+     * @param to Rook Square
      */
     private boolean moveRook(Square from, Square to) {
 
