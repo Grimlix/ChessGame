@@ -16,15 +16,11 @@ public class Board implements ChessController {
     private ChessView view;
     private PlayerColor playerTurn;
     private List<Move> moves;
-    private boolean isRock = false;
-
 
     private static final int BOARD_HEIGHT = 8;
     private static final int BOARD_LENGTH = 8;
-    private final int BIG_CASTLE = 2;
+    private static final int BIG_CASTLE = 2;
     private static final int SMALL_CASTLE = -2;
-
-
 
     //Constructor
     public Board() {
@@ -43,13 +39,12 @@ public class Board implements ChessController {
         return board;
     }
 
-    public int getSmallCastle(){
+    public int getSMALL_CASTLE(){
         return SMALL_CASTLE;
     }
 
     @Override
     public void newGame() {
-        //TODO : choix de qui commence ??
         playerTurn = PlayerColor.WHITE;
         initPieces();
     }
@@ -58,13 +53,7 @@ public class Board implements ChessController {
     public void start(ChessView view) {
         this.view = view;
         view.startView();
-
-        while (true) {
-
-        }
     }
-
-    //extraire des parties dans des methodes static privées de Board si elles ne prennent pas de paramètres
 
     @Override
     public boolean move(int fromX, int fromY, int toX, int toY) {
@@ -82,13 +71,16 @@ public class Board implements ChessController {
         }
 
         //Checking if there is a rock situation
-        if (from.getPiece().getType() == PieceType.KING && ((King) from.getPiece()).isLegalRock(this, to)) {
+        boolean isRock = false;
+        if (from.getPiece() instanceof King && ((King) from.getPiece()).isLegalRock(this, to)) {
             isRock = true;
         }
 
+
         //Checking if the piece allows the move, if true we change the player's turn and
-        //the view. Otherwise returns false.
-        if (from.getPiece().isLegalMove(this, to) || (isRock && from.getPiece().getType() == PieceType.KING)) {
+        //the view. Otherwise returns false. We need to control that if there is a rock situation, it comes from the king
+        //and that it does not go upwards but only sideways
+        if (from.getPiece().isLegalMove(this, to) || (isRock && fromY == to.getY() && from.getPiece().getType() == PieceType.KING && fromX == 4)) {
 
             //Creating a move and adding it to the list
             Move move = new Move(from, to, from.getPiece());
@@ -102,12 +94,12 @@ public class Board implements ChessController {
                 //undo last move so it can be added to the view
                 moveMaker(move.getTo(), move.getFrom());
 
+
                 if (isRock) {
                    if(!moveRook(from, to)){
-                       view.displayMessage("Le chemin est mine d'echec.");
+                       view.displayMessage("Move Impossible : Une des cases du chemin vous met en echec!");
                        return false;
                    }
-                   isRock = false;
                 }
 
                 //Display the new move and change the squares on the board
@@ -209,6 +201,11 @@ public class Board implements ChessController {
         this.view.putPiece(from.getPiece().getType(), from.getPiece().getColor(), to.getX(), to.getY());
     }
 
+    /**
+     * Checks which player's turn it is
+     *
+     * @param from
+     */
     private boolean checkPlayerTurn(Square from) {
         //Playing turn after turn, nobody can play more than once
         if (playerTurn == PlayerColor.WHITE) {
@@ -225,6 +222,9 @@ public class Board implements ChessController {
         return true;
     }
 
+    /**
+     * Change player's turn
+     */
     private void changePlayerTurn() {
         //Changing the player's turn
         if (playerTurn == PlayerColor.WHITE) {
@@ -234,6 +234,11 @@ public class Board implements ChessController {
         }
     }
 
+    /**
+     * Check if the player tries to move an empty square
+     *
+     * @param from
+     */
     private boolean moveFromEmptySquare(Square from) {
         if (from.getPiece() == null) {
             this.view.displayMessage("La case de départ est vide...");
@@ -242,13 +247,12 @@ public class Board implements ChessController {
         return false;
     }
 
-    private void checkRock(Square from, Square to) {
-        //Checking if there is a rock situation
-        if (from.getPiece() instanceof King && ((King) from.getPiece()).isLegalRock(this, to)) {
-            isRock = true;
-        }
-    }
-
+    /**
+     * Check last move if it's a pawn on the last square in front of him
+     * which would lead to a promotion state
+     *
+     * @param lastMove
+     */
     private boolean isInPromotionState(Move lastMove) {
         if (lastMove.getTo().getPiece().getType() == PieceType.PAWN) {
             if (lastMove.getTo().getY() == 0 && lastMove.getTo().getPiece().getColor() == PlayerColor.BLACK) {
@@ -261,8 +265,17 @@ public class Board implements ChessController {
     }
 
 
+    /**
+     * Check if the path between the king and the rook makes a check situation, if it is return false
+     * else it changes the rook sqaure on the board and on the view.
+     *
+     * @param from
+     * @param to
+     */
     private boolean moveRook(Square from, Square to) {
+
         int distance = from.getX() - to.getX();
+
         switch (distance) {
             case BIG_CASTLE:
                 Move moveKingLeft = new Move(from, this.board[from.getX() - 1][from.getY()], from.getPiece());

@@ -17,6 +17,7 @@ public class Queen extends Piece {
 
     }
 
+    @Override
     public boolean isLegalMove(Board board, Square to) {
 
         if (!super.isLegalMove(board, to)) {

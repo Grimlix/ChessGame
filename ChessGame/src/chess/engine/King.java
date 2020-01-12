@@ -7,7 +7,6 @@ import java.util.List;
 
 public class King extends Piece {
 
-    private static final int DISTANCE_MAX = 2;
     private boolean hasMoved;
 
     public King(Square square, PlayerColor color, PieceType type) {
@@ -15,37 +14,51 @@ public class King extends Piece {
         this.hasMoved = false;
     }
 
+    /**
+     * Check if the path between the king and the rock is valid, and if they already moved once
+     *
+     * @param board
+     * @param x
+     * @param i_start
+     * @param i_end
+     */
     private boolean checkRook(Board board, int x, int i_start, int i_end) {
         if (!this.hasMoved) {
-            if (board.getBoard()[x][getSquare().getY()].getPiece() instanceof Rook) {//check if tower is at it place
-                if (!((Rook) board.getBoard()[x][getSquare().getY()].getPiece()).getHasMoved()) {
-                    //check if square are empty
-                    for (int i = i_start; i < i_end; i++) {
-                        if (board.getBoard()[i][getSquare().getY()].getPiece() != null) {
-                            return false;
-                        }
+            if (!((Rook) board.getBoard()[x][getSquare().getY()].getPiece()).getHasMoved()) {
+                //check if square are empty
+                for (int i = i_start; i < i_end; i++) {
+                    if (board.getBoard()[i][getSquare().getY()].getPiece() != null) {
+                        return false;
                     }
-                    return true;
                 }
+                return true;
             }
         }
         return false;
     }
 
-    //verifier que les cases sur lesquelles le roi se deplace ne sont pas en echecs
+
+    /**
+     * Checks if the rock is possible
+     *
+     * @param board
+     * @param to
+     */
     public boolean isLegalRock(Board board, Square to) {
 
         int distance = this.getSquare().getX() - to.getX();
+
         if (distance == board.getBIG_CASTLE()) {
             return checkRook(board, 0, 1, 4);
-        } else if(distance == board.getSmallCastle()){
+        } else if(distance == board.getSMALL_CASTLE()){
             return checkRook(board, 7, 5, 7);
         }else{
             return false;
         }
     }
 
-    //factoriser avec deltaX detlaY
+
+    @Override
     public boolean isLegalMove(Board board, Square to) {
 
         if (!super.isLegalMove(board, to)) {

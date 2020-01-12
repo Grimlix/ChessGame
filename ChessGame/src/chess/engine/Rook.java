@@ -20,6 +20,7 @@ public class Rook extends Piece {
         return this.hasMoved;
     }
 
+    @Override
     public boolean isLegalMove(Board board, Square to) {
 
         if (!super.isLegalMove(board, to)) {

@@ -12,11 +12,8 @@ public class Pawn extends Piece {
     }
 
 
+    @Override
     public boolean isLegalMove(Board board, Square to) {
-
-
-        /* TODO : Saut en passant (utiliser la liste des moves pour faire ça)*/
-
 
         int maxDistance = 1;
 

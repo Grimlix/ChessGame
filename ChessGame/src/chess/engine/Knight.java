@@ -11,6 +11,7 @@ public class Knight extends Piece {
         super(square, color, type);
     }
 
+    @Override
     public boolean isLegalMove(Board board, Square to) {
         if (!super.isLegalMove(board, to)) {
             return false;
