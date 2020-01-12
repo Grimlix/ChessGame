@@ -128,7 +128,7 @@ public class Board implements ChessController {
                     }
                 }
 
-                checkEnPassant(move);
+                checkEnPassant(from,to);
                 //Display the new move and change the squares on the board
                 upgradeView(from, to);
                 upgradeBoard(from, to);
@@ -159,10 +159,10 @@ public class Board implements ChessController {
     /**
      * Check if there is a en passant state and if there is, removes teh pawn that got killed
      *
-     * @param move
-     * @param
+     * @param from
+     * @param to
      */
-    private void checkEnPassant(Move move) {
+    private void checkEnPassant(Square from, Square to) {
         //If there is a "prise en passant" we have to delete the pawn
         //n = 2 because we check if the last move of the sidePiece was done just before this move, and we add
         //2 moves in between.
@@ -170,32 +170,39 @@ public class Board implements ChessController {
         Piece leftPiece = null;
 
         //set side square
-        if(move.getFrom().getX() == 0){
-            rightPiece = board[move.getFrom().getX() + 1][move.getFrom().getY()].getPiece();
-        }else if(move.getFrom().getX() == 7){
-            leftPiece = board[move.getFrom().getX() - 1][move.getFrom().getY()].getPiece();
+        if(from.getX() == 0){
+            rightPiece = board[from.getX() + 1][from.getY()].getPiece();
+        }else if(from.getX() == 7){
+            leftPiece = board[from.getX() - 1][from.getY()].getPiece();
         }else{
-            rightPiece = board[move.getFrom().getX() + 1][move.getFrom().getY()].getPiece();
-            leftPiece = board[move.getFrom().getX() - 1][move.getFrom().getY()].getPiece();
+            rightPiece = board[from.getX() + 1][from.getY()].getPiece();
+            leftPiece = board[from.getX() - 1][from.getY()].getPiece();
         }
 
         //delete pawn if needed
-        if (move.getFrom().getPiece().getType() == PieceType.PAWN) {
-            if (move.getFrom().getX() == 0) {
-                removePieceEnPassant(move,rightPiece);
-            } else if (move.getFrom().getX() == 7) {
-                removePieceEnPassant(move,leftPiece);
+        if (from.getPiece().getType() == PieceType.PAWN) {
+            if (from.getX() == 0) {
+                removePieceEnPassant(from,to,rightPiece);
+            } else if (from.getX() == 7) {
+                removePieceEnPassant(from,to,leftPiece);
             } else {
-                removePieceEnPassant(move,leftPiece);
-                removePieceEnPassant(move,rightPiece);
+                removePieceEnPassant(from,to,leftPiece);
+                removePieceEnPassant(from,to,rightPiece);
 
             }
         }
 
     }
 
-    private void removePieceEnPassant(Move move, Piece piece){
-        if(piece != null && ((Pawn) move.getFrom().getPiece()).isEnPassant(piece,move.getTo(),this,2)){
+    /**
+     *  Remove Piece eaten by En Passant
+     *
+     * @param from Attacker Square
+     * @param to Defender Square
+     * @param piece Piece on Attacker Square
+     */
+    private void removePieceEnPassant(Square from, Square to, Piece piece){
+        if(piece != null && ((Pawn) from.getPiece()).isEnPassant(piece,to,this,2)){
             this.view.removePiece(piece.getSquare().getX(), piece.getSquare().getY());
             piece.getSquare().removePiece();
         }
