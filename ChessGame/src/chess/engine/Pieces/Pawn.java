@@ -5,6 +5,8 @@ import chess.PlayerColor;
 import chess.engine.Board.Board;
 import chess.engine.Board.Square;
 
+import static java.lang.StrictMath.abs;
+
 public class Pawn extends Piece {
 
     private boolean usedFirstMove;
@@ -46,7 +48,7 @@ public class Pawn extends Piece {
         }
 
         //Y distance is less than maxDistance
-        if (StrictMath.abs(to.getY() - getSquare().getY()) > maxDistance) {
+        if (abs(to.getY() - getSquare().getY()) > maxDistance) {
             return false;
         } else {
             //if move vertically
@@ -55,7 +57,7 @@ public class Pawn extends Piece {
                     return false;
                 }
             } else {//if diagonal
-                if ((StrictMath.abs(to.getY() - getSquare().getY()) > 1) || (StrictMath.abs(to.getX() - getSquare().getX()) > 1) || to.getPiece() == null) {
+                if ((abs(to.getY() - getSquare().getY()) > 1) || (abs(to.getX() - getSquare().getX()) > 1) || to.getPiece() == null) {
 
                     //Checking if is "prise en passant" when X is 7 we on the right side of the board so we cannot control rigth side
                     //or it will create a nullpointer. Same with x = 0.
@@ -89,11 +91,10 @@ public class Pawn extends Piece {
             }
         }
 
-        if(maxDistance == 2){
-            this.usedFirstMove = true;
+
+        if(maxDistance == 2 && abs(to.getY() - this.getSquare().getY()) == 2) {
             this.lastMovePos = board.getMoves().size();
-        }else{
-            this.usedFirstMove = false;
+            this.usedFirstMove = true;
         }
         return true;
 
@@ -112,7 +113,7 @@ public class Pawn extends Piece {
         //All this shit for prise en passant
         if(sidePiece != null && sidePiece.getType() == PieceType.PAWN &&
                 ((Pawn)sidePiece).isUsedFirstMove() && sidePiece.getColor() != this.getColor() && to.getPiece() == null &&
-                to.getX() == sidePiece.getSquare().getX() && ((Pawn) sidePiece).lastMovePos + n == board.getMoves().size()){
+                to.getX() == sidePiece.getSquare().getX() && ((Pawn) sidePiece).lastMovePos + n == board.getMoves().size() && ((Pawn) sidePiece).isUsedFirstMove() == true){
             return true;
         }
         return false;

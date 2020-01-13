@@ -35,6 +35,8 @@ public class Board implements ChessController {
     private List<Move> moves;
     private List<Move> movesTargetSquare;
 
+    private boolean hasStarted;
+
     private static final int BOARD_HEIGHT = 8;
     private static final int BOARD_LENGTH = 8;
     private static final int BIG_CASTLE = 2;
@@ -46,6 +48,7 @@ public class Board implements ChessController {
         this.moves = new ArrayList<>();
         this.movesTargetSquare = new ArrayList<>();
         this.playerTurn = PlayerColor.WHITE;
+        this.hasStarted = false;
     }
 
     /**
@@ -166,6 +169,7 @@ public class Board implements ChessController {
     @Override
     public void newGame() {
         playerTurn = PlayerColor.WHITE;
+        this.hasStarted = true;
         initPieces();
     }
 
@@ -173,11 +177,19 @@ public class Board implements ChessController {
     public void start(ChessView view) {
         this.view = view;
         view.startView();
+        while(true){
+
+        }
+
     }
 
     @Override
     public boolean move(int fromX, int fromY, int toX, int toY) {
 
+        if(!hasStarted){
+            view.displayMessage("Il faut commencer une 'New Game' pour jouer");
+            return false;
+        }
 
         Square from = board[fromX][fromY];
         Square to = board[toX][toY];
@@ -202,7 +214,7 @@ public class Board implements ChessController {
         //Checking if the piece allows the move, if true we change the player's turn and
         //the view. Otherwise returns false. We need to control that if there is a rock situation, it comes from the king
         //and that it does not go upwards but only sideways
-        if (from.getPiece().isLegalMove(this, to) || (isRock && fromY == to.getY() && from.getPiece().getType() == PieceType.KING && fromX == 4)) {
+        if (from.getPiece().isLegalMove(this, to) || (isRock && fromY == to.getY() && from.getPiece().getType() == PieceType.KING && fromX == 4 && !isCheck(playerTurn))) {
 
             //Creating a move and adding it to the list
             Move move = new Move(from, to, from.getPiece(),to.getPiece());
