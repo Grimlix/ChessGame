@@ -6,13 +6,11 @@ class Move {
 
     private Square from;
     private Square to;
-    private Piece attacker;
-    private Piece defender;
+    private Piece piece;
     Move(Square from, Square to, Piece attacker, Piece defender){
         this.from = from;
         this.to = to;
-        this.attacker = attacker;
-        this.defender = defender;
+        this.piece = attacker;
     }
 
     protected Square getFrom() {
@@ -23,11 +21,8 @@ class Move {
         return to;
     }
 
-    public Piece getAttacker() {
-        return attacker;
+    public Piece getPiece() {
+        return piece;
     }
 
-    public Piece getDefender(){
-        return defender;
-    }
 }
