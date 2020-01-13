@@ -30,7 +30,7 @@ public class Pawn extends Piece {
 
         //If the pawn is still at his initial position, he can move up to
         //2 squares.
-        if ((this.getSquare().getY() == 1 && getColor() == PlayerColor.WHITE) || (this.getSquare().getY() == 6 && getColor() == PlayerColor.BLACK)) {
+        if(!isHasMoved()){
             maxDistance = 2;
         }
 
@@ -62,20 +62,24 @@ public class Pawn extends Piece {
                     if (getSquare().getX() == 0) {
                         Piece rightPiece = board.getBoard()[getSquare().getX() + 1][getSquare().getY()].getPiece();
                         if (isEnPassant(rightPiece, to, board, 1)) {
+                            setHasMoved(true);
                             return true;
                         }
                     } else if (getSquare().getX() == 7) {
                         Piece leftPiece = board.getBoard()[getSquare().getX() - 1][getSquare().getY()].getPiece();
                         if (isEnPassant(leftPiece, to, board, 1)) {
+                            setHasMoved(true);
                             return true;
                         }
                     } else {
                         Piece rightPiece = board.getBoard()[getSquare().getX() + 1][getSquare().getY()].getPiece();
                         if (isEnPassant(rightPiece, to, board, 1)) {
+                            setHasMoved(true);
                             return true;
                         }
                         Piece leftPiece = board.getBoard()[getSquare().getX() - 1][getSquare().getY()].getPiece();
                         if (isEnPassant(leftPiece, to, board, 1)) {
+                            setHasMoved(true);
                             return true;
                         }
                     }

@@ -15,12 +15,23 @@ public abstract class Piece implements ChessView.UserChoice {
     private PieceType type;
     private PlayerColor color;
     private Moveable arr[];
+    private boolean hasMoved;
+
+    public boolean isHasMoved() {
+        return hasMoved;
+    }
+
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
+
+
 
     public Piece(Square square, PlayerColor color, PieceType type) {
         this.color = color;
         this.square = square;
         this.type = type;
-
+        this.hasMoved = false;
         this.arr = new Moveable[2];
 
         Moveable diagonal = new Diagonal();

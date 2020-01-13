@@ -11,20 +11,12 @@ import java.util.List;
 
 public class Rook extends Piece {
 
-    public void setHasMoved(boolean hasMoved) {
-        this.hasMoved = hasMoved;
-    }
 
-    private boolean hasMoved;
 
     public Rook(Square square, PlayerColor color, PieceType type) {
         super(square, color, type);
-        this.hasMoved = false;
     }
 
-    public boolean getHasMoved() {
-        return this.hasMoved;
-    }
 
     @Override
     public boolean isLegalMove(Board board, Square to) {
@@ -38,7 +30,7 @@ public class Rook extends Piece {
         possibleSquare = horizontal_vertical.move(board, this.getSquare(), 7);
 
         if (possibleSquare.contains(to)) {
-            this.hasMoved = true;
+            setHasMoved(true);
             return true;
         }
         return false;

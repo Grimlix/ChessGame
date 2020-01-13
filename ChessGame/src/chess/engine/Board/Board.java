@@ -9,6 +9,8 @@ import chess.engine.Pieces.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.StrictMath.abs;
+
 public class Board implements ChessController {
 
 
@@ -19,7 +21,8 @@ public class Board implements ChessController {
     //TODO: Eventuellement changer la methode isLegalRock de King (je me souviens plus pourquoi, mais pe faire les contrôles dans board plutot que King)
     //TODO: Same pour les methodes dans Pawn
     //TODO: Faire des fonctions pour factoriser move + les methodes dans pawn et rook si besoin
-    //TODO: Verifier que chaque methode et utilisée sinon supprimer
+    //TODO: Verifier que chaque methode est utilisée sinon supprimer
+    //TODO: BUG quand on clique sur une case avant newGame -> nullPointerException
     //TODO: Commenter le code pour les cas compliqués
     //TODO: Faire les tests + document de tests
     //TODO: MAJ UML
@@ -60,25 +63,31 @@ public class Board implements ChessController {
                 lastTargetMove.getAttacker().move(lastTargetMove.getFrom());
                 //Set la Piece du Square du dernier move à son ancienne Piece
                 lastTargetMove.getFrom().setPiece(lastTargetMove.getAttacker());
-                //Remet la pièce à son ancien emplacement sur la vue
-                view.putPiece(lastTargetMove.getAttacker().getType(), lastTargetMove.getAttacker().getColor(), lastTargetMove.getFrom().getX(), lastTargetMove.getFrom().getY());
-                //Enlève la piece de son emplacement actuel de la vue
-                view.removePiece(lastTargetMove.getTo().getX(),lastTargetMove.getTo().getY());
 
-                view.putPiece(lastMove.getAttacker().getType(), lastMove.getAttacker().getColor(), lastMove.getFrom().getX(), lastMove.getFrom().getY());
-                view.removePiece(lastMove.getTo().getX(),lastMove.getTo().getY());
-
-
-                //upgradeView(lastTargetMove.getFrom())
 
                 lastMove.getAttacker().move(lastMove.getFrom());
                 lastMove.getFrom().setPiece(lastMove.getAttacker());
 
-                lastMove.getTo().removePiece();
-                lastTargetMove.getTo().removePiece();
+                view.putPiece(lastMove.getAttacker().getType(), lastMove.getAttacker().getColor(), lastMove.getFrom().getX(), lastMove.getFrom().getY());
+                view.removePiece(lastMove.getTo().getX(),lastMove.getTo().getY());
 
-/*
-                upgradeBoard(lastTargetMove.getAttacker().getSquare(),lastTargetMove.getFrom());
+                //Remet la pièce à son ancien emplacement sur la vue
+                view.putPiece(lastTargetMove.getAttacker().getType(), lastTargetMove.getAttacker().getColor(), lastTargetMove.getFrom().getX(), lastTargetMove.getFrom().getY());
+
+
+
+
+
+
+                //upgradeView(lastTargetMove.getFrom())
+
+
+
+
+
+
+
+       /*         upgradeBoard(lastTargetMove.getAttacker().getSquare(),lastTargetMove.getFrom());
                 upgradeBoard(lastMove.getAttacker().getSquare(),lastMove.getFrom());
 
                 view.putPiece(lastTargetMove.getAttacker().getType(), lastTargetMove.getAttacker().getColor(), lastTargetMove.getFrom().getX(), lastTargetMove.getFrom().getY());
@@ -90,6 +99,12 @@ public class Board implements ChessController {
                 if(lastMove.getAttacker() instanceof King){
                     //et qu'il a bougé qu'une seule fois
                     if(!hasPieceSeveralMoves(lastMove.getAttacker())){
+
+                        if(lastMove.getAttacker() instanceof King && abs(lastMove.getFrom().getX() - lastMove.getTo().getX()) == 2){
+                            lastMove.getTo().removePiece();
+                            lastTargetMove.getTo().removePiece();
+                            view.removePiece(lastTargetMove.getTo().getX(),lastTargetMove.getTo().getY());
+                        }
                         //hasMoved = false, afin de pouvoir refaire un rock
                         ((King)lastMove.getAttacker()).setHasMoved(false);
                     }
@@ -195,11 +210,11 @@ public class Board implements ChessController {
             Piece targetPiece = to.getPiece();
 
             //Making the move before checking if there is a check situation
-            upgradeBoard(from, to);
+            upgradeBoard(from,to);
 
             if (!isCheck(playerTurn)) {
                 //undo last move so it can be added to the view
-                upgradeBoard(move.getTo(), move.getFrom());
+                upgradeBoard(to,from);
 
                 if (isRock) {
                     if (!moveRook(from, to)) {
@@ -217,7 +232,7 @@ public class Board implements ChessController {
 
                 //Display the new move and change the squares on the board
                 upgradeView(from, to);
-                upgradeBoard(from, to);
+                upgradeBoard(from,to);
 
                 checkPromotionState(to);
                 changePlayerTurn();
@@ -229,7 +244,7 @@ public class Board implements ChessController {
                 return true;
             } else {
                 //Undo last move
-                upgradeBoard(move.getTo(), move.getFrom());
+                upgradeBoard(to,from);
                 moves.remove(move);
                 this.view.displayMessage("Move Impossible : mise en echec.");
                 return false;
@@ -357,11 +372,19 @@ public class Board implements ChessController {
     /**
      * Switch the piece from 2 squares on the board.
      */
+
     private void upgradeBoard(Square from, Square to) {
         from.getPiece().move(to);
         to.setPiece(from.getPiece());
         from.removePiece();
     }
+
+    /*
+    private void upgradeBoard(Move move) {
+        move.getAttacker().move(move.getTo());
+        move.getTo().setPiece(move.getAttacker());
+        move.getFrom().removePiece();
+    }*/
 
     /**
      * Switch the piece from 2 square on the view.
@@ -456,16 +479,15 @@ public class Board implements ChessController {
                 upgradeBoard(from, intermediateSquare);
                 if (!isCheck(playerTurn)) {
                     //undo
-                    upgradeBoard(intermediateSquare, from);
+                    upgradeBoard(intermediateSquare,from);
                     moves.remove(moveKingLeft);
-
-                    movesTargetSquare.add(new Move(board[0][from.getY()], board[3][from.getY()],board[0][from.getY()].getPiece(), board[3][from.getY()].getPiece() ));
+                    movesTargetSquare.add(new Move(board[0][from.getY()], board[3][from.getY()],board[0][from.getY()].getPiece(), board[3][from.getY()].getPiece()));
                     //Display the rook move and change the squares on the board
                     upgradeView(board[0][from.getY()], board[3][from.getY()]);
-                    upgradeBoard(board[0][from.getY()], board[3][from.getY()]);
+                    upgradeBoard(this.board[7][from.getY()], this.board[5][from.getY()]);
                 } else {
                     //undo
-                    upgradeBoard(intermediateSquare, from);
+                    upgradeBoard(intermediateSquare,from);
                     moves.remove(moveKingLeft);
                     return false;
                 }
@@ -476,19 +498,18 @@ public class Board implements ChessController {
                 Move moveKingRight = new Move(from, intermediateSquare, from.getPiece(),intermediateSquare.getPiece());
                 this.moves.add(moveKingRight);
 
-                upgradeBoard(from, intermediateSquare);
+                upgradeBoard(from,intermediateSquare);
                 if (!isCheck(playerTurn)) {
                     //undo
-                    upgradeBoard(moveKingRight.getTo(), moveKingRight.getFrom());
+                    upgradeBoard(intermediateSquare,from);
                     moves.remove(moveKingRight);
-
                     movesTargetSquare.add(new Move(board[7][from.getY()], board[5][from.getY()],board[7][from.getY()].getPiece(), board[5][from.getY()].getPiece() ));
                     //Display the rook move and change the squares on the board
                     upgradeView(this.board[7][from.getY()], this.board[5][from.getY()]);
                     upgradeBoard(this.board[7][from.getY()], this.board[5][from.getY()]);
                 } else {
                     //undo
-                    upgradeBoard(moveKingRight.getTo(), moveKingRight.getFrom());
+                    upgradeBoard(intermediateSquare,from);
                     moves.remove(moveKingRight);
                     return false;
                 }
