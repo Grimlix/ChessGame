@@ -95,6 +95,7 @@ public class Pawn extends Piece {
         if(maxDistance == 2 && abs(to.getY() - this.getSquare().getY()) == 2) {
             this.lastMovePos = board.getMoves().size();
             this.usedFirstMove = true;
+            this.setHasMoved(true);
         }
         return true;
 

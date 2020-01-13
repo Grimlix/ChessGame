@@ -21,7 +21,7 @@ class Move {
         return to;
     }
 
-    public Piece getPiece() {
+    protected Piece getPiece() {
         return piece;
     }
 
