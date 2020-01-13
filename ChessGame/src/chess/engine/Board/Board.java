@@ -11,6 +11,21 @@ import java.util.List;
 
 public class Board implements ChessController {
 
+
+    //TODO: Refaire la methode upgradeBoard et upgradeView peuvent prendre un move à la place. Ce qui permettra de le reutiliser dans undo
+    //TODO: Mettre un boolean hasMoved comme attribut privé de piece avec un getter et un setter
+    //TODO: Faire du "polymorphisme" pour détecter si la pièce a deja été deplacee ou non dans undo -> getter et setter hasMoved
+    //TODO: Ordonner les fonctions par type dans board
+    //TODO: Eventuellement changer la methode isLegalRock de King (je me souviens plus pourquoi, mais pe faire les contrôles dans board plutot que King)
+    //TODO: Same pour les methodes dans Pawn
+    //TODO: Faire des fonctions pour factoriser move + les methodes dans pawn et rook si besoin
+    //TODO: Verifier que chaque methode et utilisée sinon supprimer
+    //TODO: Commenter le code pour les cas compliqués
+    //TODO: Faire les tests + document de tests
+    //TODO: MAJ UML
+    //TODO: Dormir
+
+
     private Square[][] board;
     private ChessView view;
     private PlayerColor playerTurn;
@@ -41,16 +56,35 @@ public class Board implements ChessController {
 
 
             if(lastTargetMove.getAttacker() != null){
+                //Set le Square de la piece du dernier move à son ancien Square
                 lastTargetMove.getAttacker().move(lastTargetMove.getFrom());
+                //Set la Piece du Square du dernier move à son ancienne Piece
                 lastTargetMove.getFrom().setPiece(lastTargetMove.getAttacker());
+                //Remet la pièce à son ancien emplacement sur la vue
                 view.putPiece(lastTargetMove.getAttacker().getType(), lastTargetMove.getAttacker().getColor(), lastTargetMove.getFrom().getX(), lastTargetMove.getFrom().getY());
+                //Enlève la piece de son emplacement actuel de la vue
                 view.removePiece(lastTargetMove.getTo().getX(),lastTargetMove.getTo().getY());
+
                 view.putPiece(lastMove.getAttacker().getType(), lastMove.getAttacker().getColor(), lastMove.getFrom().getX(), lastMove.getFrom().getY());
                 view.removePiece(lastMove.getTo().getX(),lastMove.getTo().getY());
 
 
+                //upgradeView(lastTargetMove.getFrom())
+
                 lastMove.getAttacker().move(lastMove.getFrom());
                 lastMove.getFrom().setPiece(lastMove.getAttacker());
+
+                lastMove.getTo().removePiece();
+                lastTargetMove.getTo().removePiece();
+
+/*
+                upgradeBoard(lastTargetMove.getAttacker().getSquare(),lastTargetMove.getFrom());
+                upgradeBoard(lastMove.getAttacker().getSquare(),lastMove.getFrom());
+
+                view.putPiece(lastTargetMove.getAttacker().getType(), lastTargetMove.getAttacker().getColor(), lastTargetMove.getFrom().getX(), lastTargetMove.getFrom().getY());
+                view.removePiece(lastTargetMove.getTo().getX(),lastTargetMove.getTo().getY());
+                view.putPiece(lastMove.getAttacker().getType(), lastMove.getAttacker().getColor(), lastMove.getFrom().getX(), lastMove.getFrom().getY());
+                view.removePiece(lastMove.getTo().getX(),lastMove.getTo().getY());*/
 
                 //si le dernier move etait un roi depuis son square de depart
                 if(lastMove.getAttacker() instanceof King){
@@ -85,9 +119,7 @@ public class Board implements ChessController {
     }
 
     /**
-     * Check if piece has already move
-     * @param piece
-     * @return
+     * Return true if piece has moved more than once
      */
     private boolean hasPieceSeveralMoves(Piece piece){
         int counter = 0;
@@ -97,15 +129,6 @@ public class Board implements ChessController {
             }
         }
         return counter != 1;
-    }
-
-    private void undoEatenPiece(Move move){
-        Piece defender = move.getDefender();
-        if(defender != null){
-            defender.move(move.getTo());
-            move.getTo().setPiece(defender);
-            view.putPiece(defender.getType(), defender.getColor(), defender.getSquare().getX(), defender.getSquare().getY());
-        }
     }
 
     //Getter
@@ -222,8 +245,7 @@ public class Board implements ChessController {
     /**
      * Check if there is a en passant state and if there is, removes teh pawn that got killed
      *
-     * @param from Attaquer Square
-     * @param to Target Square
+     * @param move move durant lequel il y a eu le en passant
      */
     private boolean checkEnPassant(Move move) {
         //If there is a "prise en passant" we have to delete the pawn
@@ -265,7 +287,7 @@ public class Board implements ChessController {
     /**
      *  Remove Piece eaten by En Passant
      *
-     * @param move
+     *   
      * @param piece Piece on Attacker Square
      *
      */
