@@ -52,7 +52,7 @@ public class GUIView extends BaseView<ImageIcon> {
     BufferedImage img = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
     Graphics2D g = img.createGraphics();
     g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-    g.setColor(Color.WHITE);
+    g.setColor(Color.RED);
     g.fillRect(0, 0, img.getWidth(), img.getHeight());
     final int squareSize = 8;
     g.setColor(Color.MAGENTA);

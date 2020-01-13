@@ -15,6 +15,7 @@ public class Board implements ChessController {
     private ChessView view;
     private PlayerColor playerTurn;
     private List<Move> moves;
+    private List<Move> movesTargetSquare;
 
     private static final int BOARD_HEIGHT = 8;
     private static final int BOARD_LENGTH = 8;
@@ -25,24 +26,77 @@ public class Board implements ChessController {
     public Board() {
         this.board = new Square[BOARD_LENGTH][BOARD_HEIGHT];
         this.moves = new ArrayList<>();
+        this.movesTargetSquare = new ArrayList<>();
         this.playerTurn = PlayerColor.WHITE;
     }
 
+    /**
+     * undo last move
+     */
     public void undo(){
         //if a move has been made
         if(!moves.isEmpty()){
             Move lastMove = moves.get(moves.size()-1);
+            Move lastTargetMove = movesTargetSquare.get(movesTargetSquare.size()-1);
 
-            //Undo last move
-            upgradeView(lastMove.getTo(),lastMove.getFrom());
-            upgradeBoard(lastMove.getTo(),lastMove.getFrom());
 
-            undoEatenPiece(lastMove);
+            if(lastTargetMove.getAttacker() != null){
+                lastTargetMove.getAttacker().move(lastTargetMove.getFrom());
+                lastTargetMove.getFrom().setPiece(lastTargetMove.getAttacker());
+                view.putPiece(lastTargetMove.getAttacker().getType(), lastTargetMove.getAttacker().getColor(), lastTargetMove.getFrom().getX(), lastTargetMove.getFrom().getY());
+                view.removePiece(lastTargetMove.getTo().getX(),lastTargetMove.getTo().getY());
+                view.putPiece(lastMove.getAttacker().getType(), lastMove.getAttacker().getColor(), lastMove.getFrom().getX(), lastMove.getFrom().getY());
+                view.removePiece(lastMove.getTo().getX(),lastMove.getTo().getY());
+
+
+                lastMove.getAttacker().move(lastMove.getFrom());
+                lastMove.getFrom().setPiece(lastMove.getAttacker());
+
+                //si le dernier move etait un roi depuis son square de depart
+                if(lastMove.getAttacker() instanceof King){
+                    //et qu'il a bougé qu'une seule fois
+                    if(!hasPieceSeveralMoves(lastMove.getAttacker())){
+                        //hasMoved = false, afin de pouvoir refaire un rock
+                        ((King)lastMove.getAttacker()).setHasMoved(false);
+                    }
+                }
+                if(lastTargetMove.getAttacker() instanceof Rook){
+                    ((Rook)lastTargetMove.getAttacker()).setHasMoved(false);
+                }
+            }else{
+                //Undo last move
+                upgradeView(lastMove.getTo(),lastMove.getFrom());
+                upgradeBoard(lastMove.getTo(),lastMove.getFrom());
+            }
+
+
+
+
+
+
+
+           // undoEatenPiece(lastMove);
 
             playerTurn = lastMove.getAttacker().getColor();
 
+            movesTargetSquare.remove(lastTargetMove);
             moves.remove(lastMove);
         }
+    }
+
+    /**
+     * Check if piece has already move
+     * @param piece
+     * @return
+     */
+    private boolean hasPieceSeveralMoves(Piece piece){
+        int counter = 0;
+        for(Move m : moves){
+            if(m.getAttacker() == piece){
+                counter++;
+            }
+        }
+        return counter != 1;
     }
 
     private void undoEatenPiece(Move move){
@@ -86,8 +140,10 @@ public class Board implements ChessController {
     @Override
     public boolean move(int fromX, int fromY, int toX, int toY) {
 
+
         Square from = board[fromX][fromY];
         Square to = board[toX][toY];
+
 
         //if the source square is empty it won't work
         if (moveFromEmptySquare(from)) {
@@ -112,7 +168,8 @@ public class Board implements ChessController {
 
             //Creating a move and adding it to the list
             Move move = new Move(from, to, from.getPiece(),to.getPiece());
-            this.moves.add(move);
+            moves.add(move);
+            Piece targetPiece = to.getPiece();
 
             //Making the move before checking if there is a check situation
             upgradeBoard(from, to);
@@ -126,9 +183,15 @@ public class Board implements ChessController {
                         view.displayMessage("Move Impossible : une des cases du chemin vous met en echec!");
                         return false;
                     }
+
                 }
 
-                checkEnPassant(from,to);
+                //
+                if(!checkEnPassant(move) && !isRock){
+                    //add move to movesTargetSquare if not already done in checkEnPassant/isRock
+                    movesTargetSquare.add(new Move(to,to,targetPiece,null));
+                }
+
                 //Display the new move and change the squares on the board
                 upgradeView(from, to);
                 upgradeBoard(from, to);
@@ -162,52 +225,58 @@ public class Board implements ChessController {
      * @param from Attaquer Square
      * @param to Target Square
      */
-    private void checkEnPassant(Square from, Square to) {
+    private boolean checkEnPassant(Move move) {
         //If there is a "prise en passant" we have to delete the pawn
         //n = 2 because we check if the last move of the sidePiece was done just before this move, and we add
         //2 moves in between.
         Piece rightPiece = null;
         Piece leftPiece = null;
 
+        boolean isEnPassant = false;
+
         //set side square
-        if(from.getX() == 0){
-            rightPiece = board[from.getX() + 1][from.getY()].getPiece();
-        }else if(from.getX() == 7){
-            leftPiece = board[from.getX() - 1][from.getY()].getPiece();
+        if(move.getFrom().getX() == 0){
+            rightPiece = board[move.getFrom().getX() + 1][move.getFrom().getY()].getPiece();
+        }else if(move.getFrom().getX() == 7){
+            leftPiece = board[move.getFrom().getX() - 1][move.getFrom().getY()].getPiece();
         }else{
-            rightPiece = board[from.getX() + 1][from.getY()].getPiece();
-            leftPiece = board[from.getX() - 1][from.getY()].getPiece();
+            rightPiece = board[move.getFrom().getX() + 1][move.getFrom().getY()].getPiece();
+            leftPiece = board[move.getFrom().getX() - 1][move.getFrom().getY()].getPiece();
         }
 
         //delete pawn if needed
-        if (from.getPiece().getType() == PieceType.PAWN) {
-            if (from.getX() == 0) {
-                removePieceEnPassant(from,to,rightPiece);
-            } else if (from.getX() == 7) {
-                removePieceEnPassant(from,to,leftPiece);
+        if (move.getFrom().getPiece().getType() == PieceType.PAWN) {
+            if (move.getFrom().getX() == 0) {
+                isEnPassant = removePieceEnPassant(move,rightPiece);
+            } else if (move.getFrom().getX() == 7) {
+               isEnPassant = removePieceEnPassant(move,leftPiece);
             } else {
-                removePieceEnPassant(from,to,leftPiece);
-                removePieceEnPassant(from,to,rightPiece);
+               if(removePieceEnPassant(move,leftPiece)){
+                   return true;
+               }
+               isEnPassant = removePieceEnPassant(move,rightPiece);
 
             }
         }
+        return isEnPassant;
 
     }
 
     /**
      *  Remove Piece eaten by En Passant
      *
-     * @param from Attacker Square
-     * @param to Target Square
+     * @param move
      * @param piece Piece on Attacker Square
      *
      */
-    private void removePieceEnPassant(Square from, Square to, Piece piece){
-        if(piece != null && ((Pawn) from.getPiece()).isEnPassant(piece,to,this,2)){
+    private boolean removePieceEnPassant(Move move, Piece piece){
+        if(piece != null && ((Pawn) move.getFrom().getPiece()).isEnPassant(piece,move.getTo(),this,2)){
+            movesTargetSquare.add(new Move(piece.getSquare(),piece.getSquare(),piece, null));
             this.view.removePiece(piece.getSquare().getX(), piece.getSquare().getY());
             piece.getSquare().removePiece();
+            return true;
         }
-
+        return false;
     }
 
 
@@ -319,7 +388,7 @@ public class Board implements ChessController {
      * @param from Square from which player tries to do a move
      */
     private boolean moveFromEmptySquare(Square from) {
-        if (from.getPiece() == null) {
+        if ((from != null) && from.getPiece() == null) {
             this.view.displayMessage("La case de départ est vide...");
             return true;
         }
@@ -368,6 +437,7 @@ public class Board implements ChessController {
                     upgradeBoard(intermediateSquare, from);
                     moves.remove(moveKingLeft);
 
+                    movesTargetSquare.add(new Move(board[0][from.getY()], board[3][from.getY()],board[0][from.getY()].getPiece(), board[3][from.getY()].getPiece() ));
                     //Display the rook move and change the squares on the board
                     upgradeView(board[0][from.getY()], board[3][from.getY()]);
                     upgradeBoard(board[0][from.getY()], board[3][from.getY()]);
@@ -390,7 +460,7 @@ public class Board implements ChessController {
                     upgradeBoard(moveKingRight.getTo(), moveKingRight.getFrom());
                     moves.remove(moveKingRight);
 
-
+                    movesTargetSquare.add(new Move(board[7][from.getY()], board[5][from.getY()],board[7][from.getY()].getPiece(), board[5][from.getY()].getPiece() ));
                     //Display the rook move and change the squares on the board
                     upgradeView(this.board[7][from.getY()], this.board[5][from.getY()]);
                     upgradeBoard(this.board[7][from.getY()], this.board[5][from.getY()]);

@@ -9,6 +9,10 @@ import java.util.List;
 
 public class King extends Piece {
 
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
+
     private boolean hasMoved;
 
     public King(Square square, PlayerColor color, PieceType type) {
@@ -30,6 +34,7 @@ public class King extends Piece {
                 //check if square are empty
                 for (int i = i_start; i < i_end; i++) {
                     if (board.getBoard()[i][getSquare().getY()].getPiece() != null) {
+                        System.out.println("Il faut enlever les pieces");
                         return false;
                     }
                 }

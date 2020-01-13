@@ -11,6 +11,10 @@ import java.util.List;
 
 public class Rook extends Piece {
 
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
+
     private boolean hasMoved;
 
     public Rook(Square square, PlayerColor color, PieceType type) {
