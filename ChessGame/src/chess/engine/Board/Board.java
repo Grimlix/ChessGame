@@ -287,7 +287,7 @@ public class Board implements ChessController {
     /**
      *  Remove Piece eaten by En Passant
      *
-     *   
+     *
      * @param piece Piece on Attacker Square
      *
      */
